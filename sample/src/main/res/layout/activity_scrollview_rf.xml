@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.tk.library.view.AnythingPullLayout
+        android:id="@+id/pull_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/headerview"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="头部"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <com.tk.anythingpull.scrollview.PullScrollview
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1500dp"
+                    android:background="@drawable/shape_gradient" />
+            </LinearLayout>
+        </com.tk.anythingpull.scrollview.PullScrollview>
+    </com.tk.library.view.AnythingPullLayout>
+</LinearLayout>

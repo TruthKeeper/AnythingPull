@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tk.anythingpull">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.ScrollViewActivity" />
+        <activity android:name=".activity.ListViewActivity" />
+        <activity android:name=".activity.RecyclerViewActivity" />
+        <activity android:name=".activity.LinearLayoutActivity" />
+        <activity android:name=".activity.RelativeLayoutActivity" />
+        <activity android:name=".scrollview.FFScrollViewActivity" />
+        <activity android:name=".scrollview.RLScrollViewActivity" />
+        <activity android:name=".scrollview.NFScrollViewActivity" />
+        <activity android:name=".scrollview.FLScrollViewActivity" />
+        <activity android:name=".scrollview.FNScrollViewActivity" />
+        <activity android:name=".scrollview.RNScrollViewActivity" />
+        <activity android:name=".scrollview.RFScrollViewActivity" />
+        <activity android:name=".scrollview.NLScrollViewActivity" />
+    </application>
+
+</manifest>
