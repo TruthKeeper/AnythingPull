@@ -22,5 +22,26 @@
 <br>
 #### TODO 已完成Scrollview支持，Recyclerview中LinearLayoutManager，GridLayoutManager支持
 #### 模式装载
+![](https://github.com/TruthKeeper/AnythingPull/blob/master/sample/src/main/res/raw/framework.png)
 #### Scrollview效果图
 ![](https://github.com/TruthKeeper/AnythingPull/blob/master/sample/src/main/res/raw/scrollview.gif)  
+<br>
+```xml
+pullLayout.setOnStatusChangeListener(new AnythingPullLayout.OnStatusChangeListener() {
+            @Override
+            public void onChange(int status, int direction, float distance) {
+                if (direction == AnythingPullLayout.DIRECTION_DOWN) {
+                  //设置headerview的distance偏移量
+                } else {
+                    //设置footview的distance偏移量
+                }
+                if (status == AnythingPullLayout.REFRESHING) {
+                    //开始执行刷新数据
+                } else if (status == AnythingPullLayout.LOADING) {
+                   //开始执行加载数据
+                }
+            }
+        });
+        //TODO 自动下拉刷新
+        pullLayout.autoRefresh();
+```
