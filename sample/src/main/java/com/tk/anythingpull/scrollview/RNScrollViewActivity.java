@@ -29,7 +29,7 @@ public class RNScrollViewActivity extends AppCompatActivity {
         pullLayout.setOnStatusChangeListener(new AnythingPullLayout.OnStatusChangeListener() {
             @Override
             public void onChange(int status, int direction, float distance) {
-                if (direction == 0) {
+                if (direction == AnythingPullLayout.DIRECTION_DOWN) {
                     headerview.refreshView(status, distance);
                 }
                 if (status == AnythingPullLayout.REFRESHING) {

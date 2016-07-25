@@ -29,7 +29,7 @@ public class FLScrollViewActivity extends AppCompatActivity {
         pullLayout.setOnStatusChangeListener(new AnythingPullLayout.OnStatusChangeListener() {
             @Override
             public void onChange(int status, int direction, float distance) {
-                if (direction == 1) {
+                if (direction == AnythingPullLayout.DIRECTION_UP) {
                     footview.refreshView(status, distance);
                 }
                 if (status == AnythingPullLayout.LOADING) {
