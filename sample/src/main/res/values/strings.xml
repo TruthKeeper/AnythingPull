@@ -1,20 +1,3 @@
 <resources>
     <string name="app_name">AnythingPull</string>
-    <array name="text_data">
-        <item>模拟条目1</item>
-        <item>模拟条目2</item>
-        <item>模拟条目3</item>
-        <item>模拟条目4</item>
-        <item>模拟条目5</item>
-        <item>模拟条目6</item>
-        <item>模拟条目7</item>
-        <item>模拟条目8</item>
-        <item>模拟条目9</item>
-        <item>模拟条目10</item>
-        <item>模拟条目11</item>
-        <item>模拟条目12</item>
-        <item>模拟条目13</item>
-        <item>模拟条目14</item>
-        <item>模拟条目15</item>
-    </array>
 </resources>

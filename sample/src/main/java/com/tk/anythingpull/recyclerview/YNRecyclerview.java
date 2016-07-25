@@ -42,13 +42,10 @@ public class YNRecyclerview extends RecyclerView implements Pullable {
             int columnCount = lm.getColumnCountForAccessibility(null, null);
             int positions[] = new int[columnCount];
             lm.findFirstCompletelyVisibleItemPositions(positions);
-            for (int i : positions) {
-                if (i != 0) {
-                    //全滑到顶才可以下拉
-                    return false;
-                }
+            if (positions[0] == -1 || positions[0] == 0) {
+                return true;
             }
-            return true;
+            return false;
         }
         return false;
     }

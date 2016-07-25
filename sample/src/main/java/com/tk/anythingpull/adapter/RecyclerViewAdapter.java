@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tk.anythingpull.R;
+import com.tk.anythingpull.utils.DataUtils;
 
 /**
  * Created by TK on 2016/7/25.
@@ -17,7 +18,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter {
 
     public RecyclerViewAdapter(Context context) {
         this.context = context;
-        test = context.getResources().getStringArray(R.array.text_data);
+        test = DataUtils.initData();
     }
 
     @Override
