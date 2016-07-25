@@ -3,7 +3,6 @@ package com.tk.library.view;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.v4.widget.Space;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,13 +46,13 @@ public class AnythingPullLayout extends RelativeLayout {
     public static final int REFRESH_FLEX = 6;
     //下拉弹性滚动，上拉加载
     public static final int FLEX_LOAD = 7;
-    //什么都不干，奇葩业务逻辑ヽ(`Д´)ﾉ
+    //什么都不干模式，就别用这个控件了啊喂ヽ(`Д´)ﾉ
     public static final int NULL_NULL = 8;
     //阻力
-    private static final float PRESSURE = 2.5f;
+    private static final float PRESSURE = 3;
     //回滚时间
     private static final int DURATION = 250;
-    //延迟
+    //// TODO: 2016/7/24  自动加载延迟时间
     private static final int OFFSET_TIME = 750;
     //默认模式
     private int mode = FLEX_FLEX;
@@ -69,13 +68,19 @@ public class AnythingPullLayout extends RelativeLayout {
     public float pullDownY = 0;
     // 触摸上拉的距离>=0,理论上pullDownY，pullUpY不可能同时大于0
     private float pullUpY = 0;
-
+    //第一次layout设置模式
     private boolean firstLayout = true;
+    //上次触点坐标
     private float downY;
-    private ValueAnimator animator;
-    private OnStatusChangeListener onStatusChangeListener;
-    private boolean animLock;
+    //上次滑动点坐标
+    private float moveY;
 
+    //回弹动画
+    private ValueAnimator animator;
+    //回调监听
+    private OnStatusChangeListener onStatusChangeListener;
+    //动画锁
+    private boolean animLock;
 
     public AnythingPullLayout(Context context) {
         this(context, null);
@@ -83,59 +88,6 @@ public class AnythingPullLayout extends RelativeLayout {
 
     public AnythingPullLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-    }
-
-    /**
-     * 开始动画
-     *
-     * @param startF    开始的偏移量
-     * @param endF      结束的偏移量
-     * @param direction 方向0下拉，1上拉
-     * @param endS      动画执行结束的后的status
-     */
-    private void startAnim(float startF, float endF, final int direction, final int endS) {
-        animator = new ValueAnimator().ofFloat(startF, endF).setDuration(DURATION);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                if (direction == 0) {
-                    pullDownY = (float) animation.getAnimatedValue();
-                } else {
-                    pullUpY = (float) animation.getAnimatedValue();
-                }
-                if (onStatusChangeListener != null && status != REFRESHING && status != LOADING) {
-                    //刷新加载结束不回调
-                    onStatusChangeListener.onChange(status, direction, direction == 0 ? pullDownY : pullUpY);
-                }
-                requestLayout();
-            }
-        });
-        animator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                animLock = true;
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                animLock = false;
-                status = endS;
-                if (onStatusChangeListener != null) {
-                    onStatusChangeListener.onChange(status, direction, direction == 0 ? pullDownY : pullUpY);
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        animator.start();
     }
 
     @Override
@@ -143,17 +95,28 @@ public class AnythingPullLayout extends RelativeLayout {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 downY = ev.getY();
+                moveY = downY;
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (status == REFRESHING || status == LOADING) {
-                    return super.dispatchTouchEvent(ev);
+                    break;
                 }
-                if (((Pullable) contentView).canPullDown() && ev.getY() - downY > 0 && !animLock) {
-                    //下拉
-                    pullDownY = (ev.getY() - downY) / PRESSURE;
+                if (((Pullable) contentView).canPullDown() && !animLock) {
+                    if (ev.getY() > moveY) {
+                        //正常下拉
+                        pullDownY = pullDownY + (ev.getY() - moveY) / PRESSURE;
+                    } else {
+                        //下拉过程中上拉，无阻力
+                        if (pullDownY == 0) {
+                            break;
+                        }
+                        pullDownY = pullDownY + (ev.getY() - moveY);
+                    }
+                    moveY = ev.getY();
                     //接口回调
-                    if (pullDownY >= headerView.getMeasuredHeight()
-                            && mode != FLEX_FLEX && mode != FLEX_LOAD && mode != FLEX_NULL) {
+                    if (mode != FLEX_FLEX && mode != FLEX_LOAD && mode != FLEX_NULL
+                            && pullDownY >= headerView.getMeasuredHeight()
+                            ) {
                         status = TO_REFRESH;
                     } else {
                         status = INIT;
@@ -163,12 +126,22 @@ public class AnythingPullLayout extends RelativeLayout {
                     }
                     requestLayout();
                     return true;
-                } else if (((Pullable) contentView).canPullUp() && ev.getY() - downY < 0 && !animLock) {
-                    //上拉
-                    pullUpY = -(ev.getY() - downY) / PRESSURE;
+                } else if (((Pullable) contentView).canPullUp() && !animLock) {
+                    if (ev.getY() > moveY) {
+                        //上拉过程中下拉，无阻力
+                        if (pullUpY == 0) {
+                            break;
+                        }
+                        pullUpY = pullUpY + (moveY - ev.getY());
+                    } else {
+                        //正常上拉
+                        pullUpY = pullUpY + (moveY - ev.getY()) / PRESSURE;
+                    }
+                    moveY = ev.getY();
                     //接口回调
-                    if (pullUpY >= footView.getMeasuredHeight()
-                            && mode != REFRESH_FLEX && mode != NULL_FLEX && mode != FLEX_FLEX) {
+                    if (mode != REFRESH_FLEX && mode != NULL_FLEX && mode != FLEX_FLEX
+                            && pullUpY >= footView.getMeasuredHeight()
+                            ) {
                         status = TO_LOAD;
                     } else {
                         status = INIT;
@@ -179,6 +152,7 @@ public class AnythingPullLayout extends RelativeLayout {
                     requestLayout();
                     return true;
                 } else {
+                    moveY = ev.getY();
                     if (pullDownY != 0 || pullUpY != 0 && !animLock) {
                         pullDownY = 0;
                         pullUpY = 0;
@@ -304,29 +278,91 @@ public class AnythingPullLayout extends RelativeLayout {
             }
 
             ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-            if (headerView == null) {
-                headerView = new Space(getContext());
-                headerView.setLayoutParams(p);
-            }
-            if (footView == null) {
-                footView = new Space(getContext());
-                footView.setLayoutParams(p);
-            }
+//            if (headerView == null) {
+//                headerView = new Space(getContext());
+//                headerView.setLayoutParams(p);
+//            }
+//            if (footView == null) {
+//                footView = new Space(getContext());
+//                footView.setLayoutParams(p);
+//            }
             firstLayout = !firstLayout;
         }
-        headerView.layout(0,
-                (int) (pullDownY - pullUpY - headerView.getMeasuredHeight()),
-                headerView.getMeasuredWidth(),
-                (int) (pullDownY - pullUpY));
+        if (pullDownY < 0) {
+            pullDownY = 0;
+        }
+        if (pullUpY < 0) {
+            pullUpY = 0;
+        }
+        if (headerView != null) {
+            headerView.layout(0,
+                    (int) (pullDownY - pullUpY - headerView.getMeasuredHeight()),
+                    headerView.getMeasuredWidth(),
+                    (int) (pullDownY - pullUpY));
+        }
         contentView.layout(0,
                 (int) (pullDownY - pullUpY),
                 contentView.getMeasuredWidth(),
                 (int) (pullDownY - pullUpY + contentView.getMeasuredHeight()));
-        footView.layout(0,
-                (int) (pullDownY - pullUpY) + bottom - top,
-                footView.getMeasuredWidth(),
-                (int) (pullDownY - pullUpY) + bottom - top
-                        + footView.getMeasuredHeight());
+        if (footView != null) {
+            footView.layout(0,
+                    (int) (pullDownY - pullUpY) + bottom - top,
+                    footView.getMeasuredWidth(),
+                    (int) (pullDownY - pullUpY) + bottom - top
+                            + footView.getMeasuredHeight());
+        }
+    }
+
+    /**
+     * 开始动画
+     *
+     * @param startF    开始的偏移量
+     * @param endF      结束的偏移量
+     * @param direction 方向0下拉，1上拉
+     * @param endS      动画执行结束的后的status
+     */
+    private void startAnim(float startF, float endF, final int direction, final int endS) {
+        animator = new ValueAnimator().ofFloat(startF, endF).setDuration(DURATION);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (direction == 0) {
+                    pullDownY = (float) animation.getAnimatedValue();
+                } else {
+                    pullUpY = (float) animation.getAnimatedValue();
+                }
+                if (onStatusChangeListener != null && status != REFRESHING && status != LOADING) {
+                    //刷新加载结束不回调
+                    onStatusChangeListener.onChange(status, direction, direction == 0 ? pullDownY : pullUpY);
+                }
+                requestLayout();
+            }
+        });
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                animLock = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                animLock = false;
+                status = endS;
+                if (onStatusChangeListener != null) {
+                    onStatusChangeListener.onChange(status, direction, direction == 0 ? pullDownY : pullUpY);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        animator.start();
     }
 
     /**
@@ -419,6 +455,9 @@ public class AnythingPullLayout extends RelativeLayout {
         }, OFFSET_TIME);
     }
 
+    /**
+     * 自动下拉
+     */
     public void autoRefresh() {
         animLock = true;
         postDelayed(new Runnable() {

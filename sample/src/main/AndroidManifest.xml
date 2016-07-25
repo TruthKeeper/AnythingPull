@@ -28,6 +28,16 @@
         <activity android:name=".scrollview.RNScrollViewActivity" />
         <activity android:name=".scrollview.RFScrollViewActivity" />
         <activity android:name=".scrollview.NLScrollViewActivity" />
+
+        <activity android:name=".recyclerview.FFRecyclerViewActivity" />
+        <activity android:name=".recyclerview.FLRecyclerViewActivity" />
+        <activity android:name=".recyclerview.FNRecyclerViewActivity" />
+        <activity android:name=".recyclerview.NFRecyclerViewActivity" />
+        <activity android:name=".recyclerview.NLRecyclerViewActivity" />
+        <activity android:name=".recyclerview.RFRecyclerViewActivity" />
+        <activity android:name=".recyclerview.RLRecyclerViewActivity" />
+        <activity android:name=".recyclerview.RNRecyclerViewActivity" />
+
     </application>
 
 </manifest>

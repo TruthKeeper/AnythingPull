@@ -20,18 +20,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ListView(View v) {
-        startActivity(new Intent(this, ScrollViewActivity.class));
+        startActivity(new Intent(this, ListViewActivity.class));
     }
 
     public void RecyclerView(View v) {
-        startActivity(new Intent(this, ScrollViewActivity.class));
+        startActivity(new Intent(this, RecyclerViewActivity.class));
     }
 
     public void LinearLayout(View v) {
-        startActivity(new Intent(this, ScrollViewActivity.class));
+        startActivity(new Intent(this, LinearLayoutActivity.class));
     }
 
     public void RelativeLayout(View v) {
-        startActivity(new Intent(this, ScrollViewActivity.class));
+        startActivity(new Intent(this, RelativeLayoutActivity.class));
     }
 }
