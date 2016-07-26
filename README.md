@@ -20,7 +20,7 @@
 <br>
 8.下拉弹性滚动，上拉加载
 <br>
-#### TODO 已完成Scrollview支持，Recyclerview中LinearLayoutManager，GridLayoutManager支持
+#### TODO 已完成Scrollview支持，Recyclerview中LinearLayoutManager，GridLayoutManager支持，Listview支持
 #### 模式装载
 ![](https://github.com/TruthKeeper/AnythingPull/blob/master/sample/src/main/res/raw/framework.png)
 #### Scrollview效果图
