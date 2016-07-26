@@ -104,10 +104,13 @@ public class AnythingPullLayout extends RelativeLayout {
                 if (status == REFRESHING || status == LOADING) {
                     break;
                 }
-                if (((Pullable) contentView).canPullDown() && !animLock) {
+                if (((Pullable) contentView).canPullDown() && ev.getY() - downY > 0 && !animLock) {
+                    pullUpY = 0;
                     if (ev.getY() > moveY) {
                         //正常下拉
                         pullDownY = pullDownY + (ev.getY() - moveY) / PRESSURE;
+                        //偏移补正
+                        downY += (ev.getY() - moveY - (ev.getY() - moveY) / PRESSURE);
                     } else {
                         //下拉过程中上拉，无阻力
                         if (pullDownY == 0) {
@@ -129,7 +132,8 @@ public class AnythingPullLayout extends RelativeLayout {
                     }
                     requestLayout();
                     return true;
-                } else if (((Pullable) contentView).canPullUp() && !animLock) {
+                } else if (((Pullable) contentView).canPullUp() && ev.getY() - downY < 0 && !animLock) {
+                    pullDownY = 0;
                     if (ev.getY() > moveY) {
                         //上拉过程中下拉，无阻力
                         if (pullUpY == 0) {
@@ -139,6 +143,8 @@ public class AnythingPullLayout extends RelativeLayout {
                     } else {
                         //正常上拉
                         pullUpY = pullUpY + (moveY - ev.getY()) / PRESSURE;
+                        //偏移补正
+                        downY -= (moveY - ev.getY() - (moveY - ev.getY()) / PRESSURE);
                     }
                     moveY = ev.getY();
                     //接口回调

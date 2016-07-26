@@ -7,26 +7,23 @@ import android.widget.ListView;
 
 import com.tk.library.callback.Pullable;
 
-public class PullableListView extends ListView implements Pullable {
-    public PullableListView(Context context) {
+public class NYListView extends ListView implements Pullable {
+
+    public NYListView(Context context) {
         super(context);
     }
 
-    public PullableListView(Context context, AttributeSet attrs) {
+    public NYListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public PullableListView(Context context, AttributeSet attrs, int defStyle) {
+    public NYListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     @Override
     public boolean canPullDown() {
-        if (getCount() == 0) {
-            // 没有item的时候也可以下拉刷新
-            return true;
-        }
-        return getFirstVisiblePosition() == 0 && getChildAt(0) == null ? true : getChildAt(0).getTop() >= 0;
+        return false;
     }
 
     @Override

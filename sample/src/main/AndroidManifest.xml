@@ -38,6 +38,14 @@
         <activity android:name=".recyclerview.RLRecyclerViewActivity" />
         <activity android:name=".recyclerview.RNRecyclerViewActivity" />
 
+        <activity android:name=".listview.FFListViewActivity" />
+        <activity android:name=".listview.FLListViewActivity" />
+        <activity android:name=".listview.FNListViewActivity" />
+        <activity android:name=".listview.NFListViewActivity" />
+        <activity android:name=".listview.NLListViewActivity" />
+        <activity android:name=".listview.RFListViewActivity" />
+        <activity android:name=".listview.RLListViewActivity" />
+        <activity android:name=".listview.RNListViewActivity" />
     </application>
 
 </manifest>
