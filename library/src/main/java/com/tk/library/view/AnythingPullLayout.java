@@ -6,6 +6,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -93,6 +94,7 @@ public class AnythingPullLayout extends RelativeLayout {
         super(context, attrs);
     }
 
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
@@ -118,7 +120,7 @@ public class AnythingPullLayout extends RelativeLayout {
                         }
                         pullDownY = pullDownY + (ev.getY() - moveY);
                     }
-                    moveY = ev.getY();
+
                     //接口回调
                     if (mode != FLEX_FLEX && mode != FLEX_LOAD && mode != FLEX_NULL
                             && pullDownY >= headerView.getMeasuredHeight()
@@ -130,6 +132,13 @@ public class AnythingPullLayout extends RelativeLayout {
                     if (onStatusChangeListener != null) {
                         onStatusChangeListener.onChange(status, DIRECTION_DOWN, pullDownY);
                     }
+                    if (ev.getY() > moveY && (pullDownY + pullUpY) > ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
+                        // 防止下拉过程中误触发长按事件和点击事件
+                        //// TODO: 2016/7/29
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        super.dispatchTouchEvent(ev);
+                    }
+                    moveY = ev.getY();
                     requestLayout();
                     return true;
                 } else if (((Pullable) contentView).canPullUp() && ev.getY() - downY < 0 && !animLock) {
@@ -145,8 +154,8 @@ public class AnythingPullLayout extends RelativeLayout {
                         pullUpY = pullUpY + (moveY - ev.getY()) / PRESSURE;
                         //偏移补正
                         downY -= (moveY - ev.getY() - (moveY - ev.getY()) / PRESSURE);
+
                     }
-                    moveY = ev.getY();
                     //接口回调
                     if (mode != REFRESH_FLEX && mode != NULL_FLEX && mode != FLEX_FLEX
                             && pullUpY >= footView.getMeasuredHeight()
@@ -158,6 +167,13 @@ public class AnythingPullLayout extends RelativeLayout {
                     if (onStatusChangeListener != null) {
                         onStatusChangeListener.onChange(status, DIRECTION_UP, pullUpY);
                     }
+                    if (ev.getY() < moveY && (pullDownY + pullUpY) > ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
+                        // 防止上拉过程中误触发长按事件和点击事件
+                        //// TODO: 2016/7/29
+                        ev.setAction(MotionEvent.ACTION_CANCEL);
+                        super.dispatchTouchEvent(ev);
+                    }
+                    moveY = ev.getY();
                     requestLayout();
                     return true;
                 } else {
@@ -168,7 +184,6 @@ public class AnythingPullLayout extends RelativeLayout {
                         requestLayout();
                     }
                 }
-
                 break;
             case MotionEvent.ACTION_UP:
                 if (status == REFRESHING || status == LOADING) {
