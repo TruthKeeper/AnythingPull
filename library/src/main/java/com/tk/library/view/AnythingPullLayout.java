@@ -6,7 +6,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -132,11 +131,11 @@ public class AnythingPullLayout extends RelativeLayout {
                     if (onStatusChangeListener != null) {
                         onStatusChangeListener.onChange(status, DIRECTION_DOWN, pullDownY);
                     }
-                    if (ev.getY() > moveY && (pullDownY + pullUpY) > ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
+                    if (ev.getY() > moveY && (pullDownY + pullUpY) > 10) {
                         // 防止下拉过程中误触发长按事件和点击事件
                         //// TODO: 2016/7/29
                         ev.setAction(MotionEvent.ACTION_CANCEL);
-                        super.dispatchTouchEvent(ev);
+                        contentView.dispatchTouchEvent(ev);
                     }
                     moveY = ev.getY();
                     requestLayout();
@@ -167,11 +166,11 @@ public class AnythingPullLayout extends RelativeLayout {
                     if (onStatusChangeListener != null) {
                         onStatusChangeListener.onChange(status, DIRECTION_UP, pullUpY);
                     }
-                    if (ev.getY() < moveY && (pullDownY + pullUpY) > ViewConfiguration.get(getContext()).getScaledTouchSlop()) {
+                    if (ev.getY() < moveY && (pullDownY + pullUpY) > 10) {
                         // 防止上拉过程中误触发长按事件和点击事件
                         //// TODO: 2016/7/29
                         ev.setAction(MotionEvent.ACTION_CANCEL);
-                        super.dispatchTouchEvent(ev);
+                        contentView.dispatchTouchEvent(ev);
                     }
                     moveY = ev.getY();
                     requestLayout();
