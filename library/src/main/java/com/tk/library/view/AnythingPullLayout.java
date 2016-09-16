@@ -17,6 +17,7 @@ import com.tk.library.callback.Pullable;
  * 下拉刷新，上拉加载父容器
  * headerview   contentview   footview
  * headerview footview 未设置且pullable为true 弹性滚动
+ * TODO 2016/8/8 NestedScrollView ListView CANCEL事件待优化
  */
 public class AnythingPullLayout extends RelativeLayout {
     //待机状态（包括释放不触发刷新或者加载）
@@ -134,8 +135,7 @@ public class AnythingPullLayout extends RelativeLayout {
                     if (ev.getY() > moveY && (pullDownY + pullUpY) > 10) {
                         // 防止下拉过程中误触发长按事件和点击事件
                         //// TODO: 2016/7/29
-                        ev.setAction(MotionEvent.ACTION_CANCEL);
-                        contentView.dispatchTouchEvent(ev);
+                        cancelChildEvent(ev);
                     }
                     moveY = ev.getY();
                     requestLayout();
@@ -169,8 +169,8 @@ public class AnythingPullLayout extends RelativeLayout {
                     if (ev.getY() < moveY && (pullDownY + pullUpY) > 10) {
                         // 防止上拉过程中误触发长按事件和点击事件
                         //// TODO: 2016/7/29
-                        ev.setAction(MotionEvent.ACTION_CANCEL);
-                        contentView.dispatchTouchEvent(ev);
+                        cancelChildEvent(ev);
+
                     }
                     moveY = ev.getY();
                     requestLayout();
@@ -267,7 +267,19 @@ public class AnythingPullLayout extends RelativeLayout {
                 }
                 break;
         }
-        return super.dispatchTouchEvent(ev);
+        try {
+            //// TODO: 2016/8/10  NestScrollview
+            return super.dispatchTouchEvent(ev);
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+        return true;
+    }
+
+
+    private void cancelChildEvent(MotionEvent ev) {
+        ev.setAction(MotionEvent.ACTION_CANCEL);
+        contentView.dispatchTouchEvent(ev);
     }
 
     @Override
@@ -494,5 +506,15 @@ public class AnythingPullLayout extends RelativeLayout {
                 startAnim(0, headerView.getMeasuredHeight(), DIRECTION_DOWN, REFRESHING);
             }
         }, OFFSET_TIME);
+    }
+	 @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+		 this.onStatusChangeListener = null;
+        animLock = true;
+        if (animator != null) {
+            animator.cancel();
+            animator = null;
+        }
     }
 }
