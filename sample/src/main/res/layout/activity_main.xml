@@ -44,20 +44,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:onClick="LinearLayout"
-            android:text="LinearLayout"
+            android:onClick="Layout"
+            android:text="Layout"
             android:textAllCaps="false"
             android:textColor="@android:color/black"
             android:textSize="24sp" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:onClick="RelativeLayout"
-            android:text="RelativeLayout"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="24sp" />
     </LinearLayout>
 </ScrollView>

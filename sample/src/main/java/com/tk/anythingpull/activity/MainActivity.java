@@ -27,11 +27,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, RecyclerViewActivity.class));
     }
 
-    public void LinearLayout(View v) {
-        startActivity(new Intent(this, LinearLayoutActivity.class));
+    public void Layout(View v) {
+        startActivity(new Intent(this, LayoutActivity.class));
     }
 
-    public void RelativeLayout(View v) {
-        startActivity(new Intent(this, RelativeLayoutActivity.class));
-    }
 }

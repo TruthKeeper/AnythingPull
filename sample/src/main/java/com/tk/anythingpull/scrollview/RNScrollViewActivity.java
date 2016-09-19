@@ -5,8 +5,12 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import com.tk.anythingpull.R;
-import com.tk.anythingpull.view.HeaderTestView;
+import com.tk.anythingpull.view.TestHeadView;
+import com.tk.library.implement.IPullDown;
+import com.tk.library.implement.IPullUp;
 import com.tk.library.view.AnythingPullLayout;
+
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -16,7 +20,7 @@ import butterknife.ButterKnife;
  */
 public class RNScrollViewActivity extends AppCompatActivity {
     @Bind(R.id.headerview)
-    HeaderTestView headerview;
+    TestHeadView headerview;
     @Bind(R.id.pull_layout)
     AnythingPullLayout pullLayout;
     private Handler handler = new Handler();
@@ -25,21 +29,19 @@ public class RNScrollViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrollview_rn);
-        ButterKnife.bind(this);
-        pullLayout.setOnStatusChangeListener(new AnythingPullLayout.OnStatusChangeListener() {
+        ButterKnife.bind(this);   pullLayout.setOnPullListener(new AnythingPullLayout.OnPullListener() {
             @Override
-            public void onChange(int status, int direction, float distance) {
-                if (direction == AnythingPullLayout.DIRECTION_DOWN) {
-                    headerview.refreshView(status, distance);
-                }
-                if (status == AnythingPullLayout.REFRESHING) {
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            pullLayout.setRefreshResult();
-                        }
-                    }, 2000);
-                }
+            public void refreshing(final IPullDown iPullDown) {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullLayout.setRefreshResult(new Random().nextInt(2) > 0);
+                    }
+                }, 2000);
+            }
+
+            @Override
+            public void loading(final IPullUp iPullUp) {
             }
         });
     }

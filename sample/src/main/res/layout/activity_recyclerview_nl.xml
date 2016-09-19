@@ -4,18 +4,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:title="AnythingPull"
+        app:titleTextColor="@android:color/white" />
+
     <com.tk.library.view.AnythingPullLayout
         android:id="@+id/pull_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.tk.anythingpull.recyclerview.NYRecyclerview
+        <com.tk.anythingpull.recyclerview.view.NYRecyclerview
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never" />
 
-        <com.tk.anythingpull.view.FootTestView
+        <com.tk.anythingpull.view.TestFootView
             android:id="@+id/footview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

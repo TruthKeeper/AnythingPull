@@ -12,7 +12,8 @@ import com.tk.anythingpull.listview.FNListViewActivity;
 import com.tk.anythingpull.listview.NFListViewActivity;
 import com.tk.anythingpull.listview.NLListViewActivity;
 import com.tk.anythingpull.listview.RFListViewActivity;
-import com.tk.anythingpull.recyclerview.RNRecyclerViewActivity;
+import com.tk.anythingpull.listview.RLListViewActivity;
+import com.tk.anythingpull.listview.RNListViewActivity;
 
 /**
  * Created by TK on 2016/7/23.
@@ -25,7 +26,7 @@ public class ListViewActivity extends AppCompatActivity {
     }
 
     public void REFRESH_NULL(View v) {
-        startActivity(new Intent(this, RNRecyclerViewActivity.class));
+        startActivity(new Intent(this, RNListViewActivity.class));
     }
 
     public void NULL_LOAD(View v) {
@@ -33,7 +34,7 @@ public class ListViewActivity extends AppCompatActivity {
     }
 
     public void REFRESH_LOAD(View v) {
-        startActivity(new Intent(this, RFListViewActivity.class));
+        startActivity(new Intent(this, RLListViewActivity.class));
     }
 
     public void FLEX_NULL(View v) {

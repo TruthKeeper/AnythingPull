@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.tk.anythingpull.scrollview.NYScrollview
+        <com.tk.anythingpull.scrollview.view.NYScrollview
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never">
@@ -22,9 +22,9 @@
 
                 <include layout="@layout/test_data_layout" />
             </LinearLayout>
-        </com.tk.anythingpull.scrollview.NYScrollview>
+        </com.tk.anythingpull.scrollview.view.NYScrollview>
 
-        <com.tk.anythingpull.view.FootTestView
+        <com.tk.anythingpull.view.TestFootView
             android:id="@+id/footview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

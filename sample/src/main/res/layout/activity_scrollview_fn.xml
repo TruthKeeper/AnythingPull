@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.tk.anythingpull.scrollview.YNScrollview
+        <com.tk.anythingpull.scrollview.view.YNScrollview
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never">
@@ -22,6 +22,6 @@
 
                 <include layout="@layout/test_data_layout" />
             </LinearLayout>
-        </com.tk.anythingpull.scrollview.YNScrollview>
+        </com.tk.anythingpull.scrollview.view.YNScrollview>
     </com.tk.library.view.AnythingPullLayout>
 </LinearLayout>

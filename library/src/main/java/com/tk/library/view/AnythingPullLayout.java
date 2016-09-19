@@ -6,30 +6,34 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.tk.library.callback.Pullable;
+import com.tk.library.implement.IPullDown;
+import com.tk.library.implement.IPullUp;
+import com.tk.library.implement.IPullable;
 
 
 /**
  * Created by TK on 2016/7/21.
+ * Refreshed by TK on 2016/9/19.
  * 下拉刷新，上拉加载父容器
  * headerview   contentview   footview
- * headerview footview 未设置且pullable为true 弹性滚动
- * TODO 2016/8/8 NestedScrollView ListView CANCEL事件待优化
+ * TODO 2016/9/19 NestedScrollView ListView CANCEL事件待优化
  */
 public class AnythingPullLayout extends RelativeLayout {
-    //待机状态（包括释放不触发刷新或者加载）
+    //待机状态（无触摸）
     public static final int INIT = 0;
+    //触摸状态（释放不触发刷新或者加载）
+    public static final int PULLING = 1;
     //释放将触发下拉刷新
-    public static final int TO_REFRESH = 1;
+    public static final int TO_REFRESH = 2;
     //下拉刷新ing
-    public static final int REFRESHING = 2;
+    public static final int REFRESHING = 3;
     //释放将触发上拉加载
-    public static final int TO_LOAD = 3;
+    public static final int TO_LOAD = 4;
     //上拉加载ing
-    public static final int LOADING = 4;
+    public static final int LOADING = 5;
+    //支持的Mode
     //下拉刷新
     public static final int REFRESH_NULL = 0;
     //上拉加载
@@ -51,12 +55,14 @@ public class AnythingPullLayout extends RelativeLayout {
     //阻力
     private static final float PRESSURE = 3;
     //回滚时间
-    private static final int DURATION = 250;
-    //// TODO: 2016/7/24  自动加载延迟时间
-    private static final int OFFSET_TIME = 750;
-    //回调下拉方向
+    private static final int DURATION = 350;
+    //结果停留时间
+    private static final int STAY_TIME = 1000;
+    //// TODO: 2016/9/19  延迟时间
+    private static final int DELAY_TIME = 500;
+    //回弹下拉方向
     public static final int DIRECTION_DOWN = 0;
-    //回调上拉方向
+    //回弹上拉方向
     public static final int DIRECTION_UP = 1;
     //默认模式
     private int mode = FLEX_FLEX;
@@ -64,10 +70,13 @@ public class AnythingPullLayout extends RelativeLayout {
     private int status = INIT;
     //头部
     private View headerView = null;
+    private IPullDown iPullDown = null;
     //底部
     private View footView = null;
+    private IPullUp iPullUp = null;
     //内容
     private View contentView = null;
+    private IPullable iPullable = null;
     // 触摸下拉的距离>=0
     public float pullDownY = 0;
     // 触摸上拉的距离>=0,理论上pullDownY，pullUpY不可能同时大于0
@@ -78,13 +87,11 @@ public class AnythingPullLayout extends RelativeLayout {
     private float downY;
     //上次滑动点坐标
     private float moveY;
-
     //回弹动画
     private ValueAnimator animator;
-    //回调监听
-    private OnStatusChangeListener onStatusChangeListener;
     //动画锁
     private boolean animLock;
+    private OnPullListener onPullListener;
 
     public AnythingPullLayout(Context context) {
         this(context, null);
@@ -99,14 +106,18 @@ public class AnythingPullLayout extends RelativeLayout {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                status = INIT;
                 downY = ev.getY();
                 moveY = downY;
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (status == REFRESHING || status == LOADING) {
+                if (status == REFRESHING
+                        || status == LOADING
+                        || animLock) {
                     break;
                 }
-                if (((Pullable) contentView).canPullDown() && ev.getY() - downY > 0 && !animLock) {
+                if (iPullable.canPullDown(pulldownByMode())
+                        && ev.getY() - downY > 0) {
                     pullUpY = 0;
                     if (ev.getY() > moveY) {
                         //正常下拉
@@ -120,19 +131,32 @@ public class AnythingPullLayout extends RelativeLayout {
                         }
                         pullDownY = pullDownY + (ev.getY() - moveY);
                     }
-
-                    //接口回调
-                    if (mode != FLEX_FLEX && mode != FLEX_LOAD && mode != FLEX_NULL
-                            && pullDownY >= headerView.getMeasuredHeight()
-                            ) {
-                        status = TO_REFRESH;
-                    } else {
-                        status = INIT;
+                    if (iPullDown != null) {
+                        iPullDown.pull(pullDownY);
+                        if (status == INIT) {
+                            status = PULLING;
+                            iPullDown.startPull();
+                        }
                     }
-                    if (onStatusChangeListener != null) {
-                        onStatusChangeListener.onChange(status, DIRECTION_DOWN, pullDownY);
+                    if (mode != FLEX_FLEX
+                            && mode != FLEX_LOAD
+                            && mode != FLEX_NULL) {
+                        if (pullDownY >= headerView.getMeasuredHeight()) {
+                            if (status != TO_REFRESH) {
+                                //just回调一次
+                                status = TO_REFRESH;
+                                iPullDown.releaseToRefresh();
+                            }
+                        } else {
+                            if (status != PULLING) {
+                                //just回调一次
+                                status = PULLING;
+                                iPullDown.releaseToInit();
+                            }
+                        }
                     }
-                    if (ev.getY() > moveY && (pullDownY + pullUpY) > 10) {
+                    if (ev.getY() > moveY
+                            && (pullDownY + pullUpY) > 10) {
                         // 防止下拉过程中误触发长按事件和点击事件
                         //// TODO: 2016/7/29
                         cancelChildEvent(ev);
@@ -140,7 +164,8 @@ public class AnythingPullLayout extends RelativeLayout {
                     moveY = ev.getY();
                     requestLayout();
                     return true;
-                } else if (((Pullable) contentView).canPullUp() && ev.getY() - downY < 0 && !animLock) {
+                } else if (iPullable.canPullUp(pullupByMode())
+                        && ev.getY() - downY < 0) {
                     pullDownY = 0;
                     if (ev.getY() > moveY) {
                         //上拉过程中下拉，无阻力
@@ -155,22 +180,35 @@ public class AnythingPullLayout extends RelativeLayout {
                         downY -= (moveY - ev.getY() - (moveY - ev.getY()) / PRESSURE);
 
                     }
-                    //接口回调
-                    if (mode != REFRESH_FLEX && mode != NULL_FLEX && mode != FLEX_FLEX
-                            && pullUpY >= footView.getMeasuredHeight()
-                            ) {
-                        status = TO_LOAD;
-                    } else {
-                        status = INIT;
+                    if (iPullUp != null) {
+                        iPullUp.pull(pullUpY);
+                        if (status == INIT) {
+                            status = PULLING;
+                            iPullUp.startPull();
+                        }
                     }
-                    if (onStatusChangeListener != null) {
-                        onStatusChangeListener.onChange(status, DIRECTION_UP, pullUpY);
+                    if (mode != REFRESH_FLEX
+                            && mode != NULL_FLEX
+                            && mode != FLEX_FLEX) {
+                        if (pullUpY >= footView.getMeasuredHeight()) {
+                            if (status != TO_LOAD) {
+                                //just回调一次
+                                status = TO_LOAD;
+                                iPullUp.releaseToLoad();
+                            }
+                        } else {
+                            if (status != PULLING) {
+                                //just回调一次
+                                status = PULLING;
+                                iPullUp.releaseToInit();
+                            }
+                        }
                     }
-                    if (ev.getY() < moveY && (pullDownY + pullUpY) > 10) {
+                    if (ev.getY() < moveY
+                            && (pullDownY + pullUpY) > 10) {
                         // 防止上拉过程中误触发长按事件和点击事件
                         //// TODO: 2016/7/29
                         cancelChildEvent(ev);
-
                     }
                     moveY = ev.getY();
                     requestLayout();
@@ -188,7 +226,8 @@ public class AnythingPullLayout extends RelativeLayout {
                 if (status == REFRESHING || status == LOADING) {
                     return super.dispatchTouchEvent(ev);
                 }
-                if ((pullDownY > 0 || pullUpY > 0) && !animLock) {
+                if ((pullDownY > 0 || pullUpY > 0)
+                        && !animLock) {
                     switch (mode) {
                         case FLEX_NULL:
                             startAnim(pullDownY, 0, DIRECTION_DOWN, INIT);
@@ -271,7 +310,6 @@ public class AnythingPullLayout extends RelativeLayout {
             //// TODO: 2016/8/10  NestScrollview
             return super.dispatchTouchEvent(ev);
         } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
         }
         return true;
     }
@@ -287,40 +325,58 @@ public class AnythingPullLayout extends RelativeLayout {
         if (firstLayout) {
             //第一次加载子view
             int i = getChildCount();
-            if (i == 0) {
-                throw new IllegalArgumentException("child count not allowed to empty");
+            switch (i) {
+                case 0:
+                    throw new IllegalArgumentException("child count not standard");
+                case 1:
+                    if (getChildAt(0) instanceof IPullable) {
+                        contentView = getChildAt(0);
+                        iPullable = (IPullable) contentView;
+                        calculMode((IPullable) contentView, 0);
+                    } else {
+                        throw new IllegalArgumentException("child not standard");
+                    }
+                    break;
+                case 2:
+                    if ((getChildAt(0) instanceof IPullDown)
+                            && (getChildAt(1) instanceof IPullable)) {
+                        //刷新头+body
+                        headerView = getChildAt(0);
+                        contentView = getChildAt(1);
+                        iPullDown = (IPullDown) headerView;
+                        iPullable = (IPullable) contentView;
+                        calculMode((IPullable) contentView, 1);
+                    } else if ((getChildAt(0) instanceof IPullable)
+                            && (getChildAt(1) instanceof IPullUp)) {
+                        //body+上拉底部
+                        contentView = getChildAt(0);
+                        footView = getChildAt(1);
+                        iPullUp = (IPullUp) footView;
+                        iPullable = (IPullable) contentView;
+                        calculMode((IPullable) contentView, 0);
+                    } else {
+                        throw new IllegalArgumentException("child not standard");
+                    }
+                    break;
+                case 3:
+                    if ((getChildAt(0) instanceof IPullDown)
+                            && (getChildAt(1) instanceof IPullable)
+                            && (getChildAt(2) instanceof IPullUp)) {
+                        //刷新头+body+上拉底部
+                        headerView = getChildAt(0);
+                        contentView = getChildAt(1);
+                        footView = getChildAt(2);
+                        iPullDown = (IPullDown) headerView;
+                        iPullable = (IPullable) contentView;
+                        iPullUp = (IPullUp) footView;
+                        calculMode((IPullable) contentView, 1);
+                    } else {
+                        throw new IllegalArgumentException("child not standard");
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("child count not standard");
             }
-            if (i == 1 && getChildAt(0) instanceof Pullable) {
-                calculMode((Pullable) getChildAt(0), 0);
-                contentView = getChildAt(0);
-            } else if (i == 2) {
-                if (getChildAt(0) instanceof Pullable) {
-                    calculMode((Pullable) getChildAt(0), 0);
-                    contentView = getChildAt(0);
-                    footView = getChildAt(1);
-                } else {
-                    calculMode((Pullable) getChildAt(1), 1);
-                    headerView = getChildAt(0);
-                    contentView = getChildAt(1);
-                }
-            } else if (i == 3 && getChildAt(1) instanceof Pullable) {
-                calculMode((Pullable) getChildAt(1), 1);
-                headerView = getChildAt(0);
-                contentView = getChildAt(1);
-                footView = getChildAt(2);
-            } else {
-                throw new IllegalArgumentException("child not standard");
-            }
-
-            ViewGroup.LayoutParams p = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
-//            if (headerView == null) {
-//                headerView = new Space(getContext());
-//                headerView.setLayoutParams(p);
-//            }
-//            if (footView == null) {
-//                footView = new Space(getContext());
-//                footView.setLayoutParams(p);
-//            }
             firstLayout = !firstLayout;
         }
         if (pullDownY < 0) {
@@ -356,7 +412,7 @@ public class AnythingPullLayout extends RelativeLayout {
      * @param direction 方向0下拉，1上拉
      * @param endS      动画执行结束的后的status
      */
-    private void startAnim(float startF, float endF, final int direction, final int endS) {
+    private void startAnim(final float startF, float endF, final int direction, final int endS) {
         animator = new ValueAnimator().ofFloat(startF, endF).setDuration(DURATION);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -365,10 +421,6 @@ public class AnythingPullLayout extends RelativeLayout {
                     pullDownY = (float) animation.getAnimatedValue();
                 } else {
                     pullUpY = (float) animation.getAnimatedValue();
-                }
-                if (onStatusChangeListener != null && status != REFRESHING && status != LOADING) {
-                    //刷新加载结束不回调
-                    onStatusChangeListener.onChange(status, direction, direction == DIRECTION_DOWN ? pullDownY : pullUpY);
                 }
                 requestLayout();
             }
@@ -381,10 +433,21 @@ public class AnythingPullLayout extends RelativeLayout {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                animLock = false;
                 status = endS;
-                if (onStatusChangeListener != null) {
-                    onStatusChangeListener.onChange(status, direction, direction == DIRECTION_DOWN ? pullDownY : pullUpY);
+                if (status == REFRESHING) {
+                    iPullDown.refreshing();
+                    if (onPullListener != null
+                            && iPullDown != null) {
+                        onPullListener.refreshing(iPullDown);
+                    }
+                } else if (status == LOADING) {
+                    iPullUp.loading();
+                    if (onPullListener != null
+                            && iPullUp != null) {
+                        onPullListener.loading(iPullUp);
+                    }
+                } else {
+                    animLock = false;
                 }
             }
 
@@ -401,31 +464,31 @@ public class AnythingPullLayout extends RelativeLayout {
     }
 
     /**
-     * 计算当前view的触摸模式
+     * 计算当前body view的触摸模式
      *
-     * @param pullable
-     * @param pullIndex
+     * @param IPullable body
+     * @param pullIndex 所处位置
      */
-    private void calculMode(Pullable pullable, int pullIndex) {
+    private void calculMode(IPullable IPullable, int pullIndex) {
         if (pullIndex == 0) {
             if (getChildAt(1) == null) {
                 //单一
-                if (pullable.canPullDown() && pullable.canPullUp()) {
+                if (IPullable.canPullDown(false) && IPullable.canPullUp(false)) {
                     mode = FLEX_FLEX;
-                } else if ((!pullable.canPullDown()) && pullable.canPullUp()) {
+                } else if ((!IPullable.canPullDown(false)) && IPullable.canPullUp(false)) {
                     mode = NULL_FLEX;
-                } else if (pullable.canPullDown() && (!pullable.canPullUp())) {
+                } else if (IPullable.canPullDown(false) && (!IPullable.canPullUp(false))) {
                     mode = FLEX_NULL;
                 } else {
                     mode = NULL_NULL;
                 }
             } else {
                 //带底部view
-                if (pullable.canPullDown() && pullable.canPullUp()) {
+                if (IPullable.canPullDown(false) && IPullable.canPullUp(true)) {
                     mode = FLEX_LOAD;
-                } else if ((!pullable.canPullDown()) && pullable.canPullUp()) {
+                } else if ((!IPullable.canPullDown(false)) && IPullable.canPullUp(true)) {
                     mode = NULL_LOAD;
-                } else if (pullable.canPullDown() && (!pullable.canPullUp())) {
+                } else if (IPullable.canPullDown(false) && (!IPullable.canPullUp(true))) {
                     mode = FLEX_NULL;
                 } else {
                     mode = NULL_NULL;
@@ -434,22 +497,22 @@ public class AnythingPullLayout extends RelativeLayout {
         } else if (pullIndex == 1) {
             if (getChildAt(2) == null) {
                 //带顶部view
-                if (pullable.canPullDown() && pullable.canPullUp()) {
+                if (IPullable.canPullDown(true) && IPullable.canPullUp(false)) {
                     mode = REFRESH_FLEX;
-                } else if ((!pullable.canPullDown()) && pullable.canPullUp()) {
+                } else if ((!IPullable.canPullDown(true)) && IPullable.canPullUp(false)) {
                     mode = NULL_FLEX;
-                } else if (pullable.canPullDown() && (!pullable.canPullUp())) {
+                } else if (IPullable.canPullDown(true) && (!IPullable.canPullUp(false))) {
                     mode = REFRESH_NULL;
                 } else {
                     mode = NULL_NULL;
                 }
             } else {
                 //三明治
-                if (pullable.canPullDown() && pullable.canPullUp()) {
+                if (IPullable.canPullDown(true) && IPullable.canPullUp(true)) {
                     mode = REFRESH_LOAD;
-                } else if ((!pullable.canPullDown()) && pullable.canPullUp()) {
+                } else if ((!IPullable.canPullDown(true)) && IPullable.canPullUp(true)) {
                     mode = NULL_LOAD;
-                } else if (pullable.canPullDown() && (!pullable.canPullUp())) {
+                } else if (IPullable.canPullDown(true) && (!IPullable.canPullUp(true))) {
                     mode = REFRESH_NULL;
                 } else {
                     mode = NULL_NULL;
@@ -458,36 +521,98 @@ public class AnythingPullLayout extends RelativeLayout {
         }
     }
 
-    public void setOnStatusChangeListener(OnStatusChangeListener onStatusChangeListener) {
-        this.onStatusChangeListener = onStatusChangeListener;
+    /**
+     * 通过mode计算是否支持下拉
+     *
+     * @return
+     */
+    private boolean pulldownByMode() {
+        switch (mode) {
+            case REFRESH_NULL:
+                return true;
+            case REFRESH_LOAD:
+                return true;
+            case FLEX_NULL:
+                return true;
+            case FLEX_FLEX:
+                return true;
+            case REFRESH_FLEX:
+                return true;
+            case FLEX_LOAD:
+                return true;
+            default:
+                return false;
+        }
     }
 
-    public interface OnStatusChangeListener {
-        void onChange(int status, int direction, float distance);
+    /**
+     * 通过mode计算是否支持上拉
+     *
+     * @return
+     */
+    private boolean pullupByMode() {
+        switch (mode) {
+            case NULL_LOAD:
+                return true;
+            case REFRESH_LOAD:
+                return true;
+            case NULL_FLEX:
+                return true;
+            case FLEX_FLEX:
+                return true;
+            case REFRESH_FLEX:
+                return true;
+            case FLEX_LOAD:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public void setOnPullListener(OnPullListener onPullListener) {
+        this.onPullListener = onPullListener;
+    }
+
+    public interface OnPullListener {
+        void refreshing(IPullDown iPullDown);
+
+        void loading(IPullUp iPullUp);
     }
 
     /**
      * 上拉加载完毕
+     *
+     * @param success
      */
-    public void setLoadResult() {
+    public void setLoadResult(boolean success) {
+        if (iPullUp != null) {
+            iPullUp.refreshOver(success);
+        }
+        animLock = true;
         postDelayed(new Runnable() {
             @Override
             public void run() {
                 startAnim(footView.getMeasuredHeight(), 0, DIRECTION_UP, INIT);
             }
-        }, OFFSET_TIME);
+        }, STAY_TIME);
     }
 
     /**
      * 下拉刷新完毕
+     *
+     * @param success
      */
-    public void setRefreshResult() {
+    public void setRefreshResult(boolean success) {
+        if (iPullDown != null) {
+            iPullDown.refreshOver(success);
+        }
+        animLock = true;
         postDelayed(new Runnable() {
             @Override
             public void run() {
                 startAnim(headerView.getMeasuredHeight(), 0, DIRECTION_DOWN, INIT);
             }
-        }, OFFSET_TIME);
+        }, STAY_TIME);
     }
 
     /**
@@ -505,12 +630,13 @@ public class AnythingPullLayout extends RelativeLayout {
                 }
                 startAnim(0, headerView.getMeasuredHeight(), DIRECTION_DOWN, REFRESHING);
             }
-        }, OFFSET_TIME);
+        }, DELAY_TIME);
     }
-	 @Override
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-		 this.onStatusChangeListener = null;
+        this.onPullListener = null;
         animLock = true;
         if (animator != null) {
             animator.cancel();

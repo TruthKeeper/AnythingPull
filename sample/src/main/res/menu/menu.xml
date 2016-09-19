@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    　　
+    <item
+        android:id="@+id/LinearLayoutManager"
+        android:orderInCategory="90"
+        android:title="LinearLayoutManager"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/GridLayoutManager"
+        android:orderInCategory="90"
+        android:title="GridLayoutManager"
+        app:showAsAction="collapseActionView" />
+    <item
+        android:id="@+id/StaggeredGridLayoutManager"
+        android:orderInCategory="90"
+        android:title="StaggeredGridLayoutManager"
+        app:showAsAction="collapseActionView" />
+    　　
+</menu>

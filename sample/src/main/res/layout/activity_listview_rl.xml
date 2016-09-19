@@ -9,18 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.tk.anythingpull.view.HeaderTestView
+        <com.tk.anythingpull.view.TestHeadView
             android:id="@+id/headerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.tk.anythingpull.listview.PullableListView
+        <com.tk.anythingpull.listview.view.PullListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never" />
 
-        <com.tk.anythingpull.view.FootTestView
+        <com.tk.anythingpull.view.TestFootView
             android:id="@+id/footview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

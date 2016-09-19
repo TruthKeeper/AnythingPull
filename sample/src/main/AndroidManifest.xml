@@ -18,7 +18,7 @@
         <activity android:name=".activity.ScrollViewActivity" />
         <activity android:name=".activity.ListViewActivity" />
         <activity android:name=".activity.RecyclerViewActivity" />
-        <activity android:name=".activity.LinearLayoutActivity" />
+        <activity android:name=".activity.LayoutActivity" />
         <activity android:name=".activity.RelativeLayoutActivity" />
         <activity android:name=".scrollview.FFScrollViewActivity" />
         <activity android:name=".scrollview.RLScrollViewActivity" />
@@ -46,6 +46,15 @@
         <activity android:name=".listview.RFListViewActivity" />
         <activity android:name=".listview.RLListViewActivity" />
         <activity android:name=".listview.RNListViewActivity" />
+
+        <activity android:name=".layout.FFLayoutViewActivity" />
+        <activity android:name=".layout.FLLayoutViewActivity" />
+        <activity android:name=".layout.FNLayoutViewActivity" />
+        <activity android:name=".layout.NFLayoutViewActivity" />
+        <activity android:name=".layout.NLLayoutViewActivity" />
+        <activity android:name=".layout.RFLayoutViewActivity" />
+        <activity android:name=".layout.RLLayoutViewActivity" />
+        <activity android:name=".layout.RNLayoutViewActivity" />
     </application>
 
 </manifest>

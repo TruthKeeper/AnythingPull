@@ -5,8 +5,8 @@ package com.tk.anythingpull.utils;
  */
 public class DataUtils {
     public static String[] initData() {
-        String[] s = new String[30];
-        for (int i = 0; i < 30; i++) {
+        String[] s = new String[31];
+        for (int i = 0; i < 31; i++) {
             s[i] = "模拟条目" + i;
         }
         return s;
