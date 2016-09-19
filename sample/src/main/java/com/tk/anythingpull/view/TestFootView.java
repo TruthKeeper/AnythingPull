@@ -64,7 +64,7 @@ public class TestFootView extends LinearLayout implements IPullUp {
     }
 
     @Override
-    public void refreshOver(boolean isSuccess) {
+    public void loadOver(boolean isSuccess) {
         if (isSuccess) {
             textview.setText("加载成功");
             imageview.setImageResource(R.drawable.ok);

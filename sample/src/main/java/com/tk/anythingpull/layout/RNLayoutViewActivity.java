@@ -6,8 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.tk.anythingpull.R;
 import com.tk.anythingpull.view.TestHeadView;
-import com.tk.library.implement.IPullDown;
-import com.tk.library.implement.IPullUp;
 import com.tk.library.view.AnythingPullLayout;
 
 import java.util.Random;
@@ -32,7 +30,7 @@ public class RNLayoutViewActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         pullLayout.setOnPullListener(new AnythingPullLayout.OnPullListener() {
             @Override
-            public void refreshing(final IPullDown iPullDown) {
+            public void refreshing() {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -42,7 +40,7 @@ public class RNLayoutViewActivity extends AppCompatActivity {
             }
 
             @Override
-            public void loading(final IPullUp iPullUp) {
+            public void loading() {
             }
         });
     }

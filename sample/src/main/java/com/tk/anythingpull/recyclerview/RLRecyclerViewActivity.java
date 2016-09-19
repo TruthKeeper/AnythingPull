@@ -19,8 +19,6 @@ import com.tk.anythingpull.callback.OnRecyclerClickListener;
 import com.tk.anythingpull.recyclerview.view.PullRecyclerview;
 import com.tk.anythingpull.view.TestFootView;
 import com.tk.anythingpull.view.TestHeadView;
-import com.tk.library.implement.IPullDown;
-import com.tk.library.implement.IPullUp;
 import com.tk.library.view.AnythingPullLayout;
 
 import java.util.Random;
@@ -60,7 +58,7 @@ public class RLRecyclerViewActivity extends AppCompatActivity {
         });
         pullLayout.setOnPullListener(new AnythingPullLayout.OnPullListener() {
             @Override
-            public void refreshing(final IPullDown iPullDown) {
+            public void refreshing() {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -70,7 +68,7 @@ public class RLRecyclerViewActivity extends AppCompatActivity {
             }
 
             @Override
-            public void loading(final IPullUp iPullUp) {
+            public void loading() {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {

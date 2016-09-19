@@ -438,13 +438,13 @@ public class AnythingPullLayout extends RelativeLayout {
                     iPullDown.refreshing();
                     if (onPullListener != null
                             && iPullDown != null) {
-                        onPullListener.refreshing(iPullDown);
+                        onPullListener.refreshing();
                     }
                 } else if (status == LOADING) {
                     iPullUp.loading();
                     if (onPullListener != null
                             && iPullUp != null) {
-                        onPullListener.loading(iPullUp);
+                        onPullListener.loading();
                     }
                 } else {
                     animLock = false;
@@ -574,9 +574,9 @@ public class AnythingPullLayout extends RelativeLayout {
     }
 
     public interface OnPullListener {
-        void refreshing(IPullDown iPullDown);
+        void refreshing();
 
-        void loading(IPullUp iPullUp);
+        void loading();
     }
 
     /**
@@ -586,7 +586,7 @@ public class AnythingPullLayout extends RelativeLayout {
      */
     public void setLoadResult(boolean success) {
         if (iPullUp != null) {
-            iPullUp.refreshOver(success);
+            iPullUp.loadOver(success);
         }
         animLock = true;
         postDelayed(new Runnable() {

@@ -36,7 +36,7 @@ public interface IPullUp {
      *
      * @param isSuccess
      */
-    void refreshOver(boolean isSuccess);
+    void loadOver(boolean isSuccess);
 
 
 }
