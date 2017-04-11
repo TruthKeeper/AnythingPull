@@ -9,14 +9,14 @@ import com.tk.anythingpull.R;
  * <pre>
  *     author : TK
  *     time   : 2017/04/11
- *     desc   : 普通布局
+ *     desc   : NestedScrollView
  * </pre>
  */
-public class LayoutActivity extends AppCompatActivity {
+public class NestedScrollViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_layout);
+        setContentView(R.layout.activity_nestedscrollview);
     }
 
 }

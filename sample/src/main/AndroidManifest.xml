@@ -19,7 +19,7 @@
         <activity android:name=".activity.ListViewActivity" />
         <activity android:name=".activity.RecyclerViewActivity" />
         <activity android:name=".activity.LayoutActivity" />
-        <activity android:name=".activity.RelativeLayoutActivity" />
+        <activity android:name=".activity.NestedScrollViewActivity" />
         <activity android:name=".scrollview.FFScrollViewActivity" />
         <activity android:name=".scrollview.RLScrollViewActivity" />
         <activity android:name=".scrollview.NFScrollViewActivity" />
