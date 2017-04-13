@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tk.library.view.AnythingPullLayout
+    <com.tk.library.AnythingPullLayout
         android:id="@+id/pull_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,5 +23,5 @@
                 <include layout="@layout/test_data_layout" />
             </LinearLayout>
         </com.tk.anythingpull.scrollview.view.NYScrollview>
-    </com.tk.library.view.AnythingPullLayout>
+    </com.tk.library.AnythingPullLayout>
 </LinearLayout>
