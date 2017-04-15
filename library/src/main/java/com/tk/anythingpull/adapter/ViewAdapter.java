@@ -1,6 +1,5 @@
 package com.tk.anythingpull.adapter;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 
 /**
@@ -13,7 +12,12 @@ import android.view.View;
 public abstract class ViewAdapter extends Adapter {
     protected View view;
 
-    public ViewAdapter(@NonNull View view) {
+    public ViewAdapter(View view) {
         this.view = view;
+    }
+
+    @Override
+    public int layoutLayer() {
+        return 0;
     }
 }

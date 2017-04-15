@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tk.sample.R;
-import com.tk.sample.utils.DataUtils;
+import com.tk.sample.DataUtils;
 
 /**
  * Created by TK on 2016/7/25.

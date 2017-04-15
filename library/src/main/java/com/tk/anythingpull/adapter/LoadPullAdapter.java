@@ -1,6 +1,5 @@
 package com.tk.anythingpull.adapter;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.tk.anythingpull.AnythingPullLayout;
@@ -14,7 +13,7 @@ import com.tk.anythingpull.AnythingPullLayout;
  */
 public class LoadPullAdapter extends ViewAdapter {
 
-    public LoadPullAdapter(@NonNull View view) {
+    public LoadPullAdapter(View view) {
         super(view);
     }
 

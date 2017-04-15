@@ -32,7 +32,7 @@
                 android:id="@+id/cbx_refresh_fixed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="刷新视图固定" />
+                android:text="刷新视图固定(弹性和抽屉模式无效)" />
         </LinearLayout>
 
         <RadioGroup
@@ -93,7 +93,7 @@
                 android:id="@+id/cbx_load_fixed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="加载视图固定" />
+                android:text="加载视图固定(弹性和抽屉模式无效))" />
         </LinearLayout>
 
         <RadioGroup

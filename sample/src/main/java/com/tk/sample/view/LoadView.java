@@ -85,6 +85,7 @@ public class LoadView extends LinearLayout implements ILoad {
 
     @Override
     public void onLoadFinish(boolean success) {
+        imageView.clearAnimation();
         imageView.setVisibility(GONE);
         tvStatus.setText(success ? "加载成功" : "加载失败");
     }

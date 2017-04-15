@@ -26,4 +26,11 @@ public abstract class Adapter {
      */
     public abstract void layout(int distance, AnythingPullLayout pullLayout);
 
+    /**
+     * 布局层次优先级，值越大优先级越高，同级时下拉刷新比上拉加载高
+     *
+     * @return
+     */
+    public abstract int layoutLayer();
+
 }

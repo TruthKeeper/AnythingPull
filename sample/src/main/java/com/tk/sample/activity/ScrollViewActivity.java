@@ -29,8 +29,11 @@ public class ScrollViewActivity extends AppCompatActivity implements AnythingPul
         Config config = getIntent().getParcelableExtra("config");
         pullLayout.setRefreshEnable(config.refreshEnable);
         pullLayout.setLoadEnable(config.loadEnable);
+
         pullLayout.setRefreshFixed(config.refreshFixed);
         pullLayout.setLoadFixed(config.loadFixed);
+
+        pullLayout.initAdapterMode(config.refreshMode, config.loadMode);
 
         pullLayout.setOnPullListener(this);
 

@@ -14,8 +14,13 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.tk.anythingpull.adapter.Adapter;
+import com.tk.anythingpull.adapter.LoadDstAdapter;
+import com.tk.anythingpull.adapter.LoadLayerAdapter;
 import com.tk.anythingpull.adapter.LoadPullAdapter;
+import com.tk.anythingpull.adapter.RefreshDstAdapter;
+import com.tk.anythingpull.adapter.RefreshLayerAdapter;
 import com.tk.anythingpull.adapter.RefreshPullAdapter;
+import com.tk.anythingpull.adapter.ViewAdapter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -74,33 +79,58 @@ public class AnythingPullLayout extends ViewGroup {
      * 加载结果停留
      */
     public static final int LOAD_RESULT = 8;
-
+    /**
+     * 普通拉动模式
+     */
+    public static final int MODE_PULL = 0;
+    /**
+     * 弹性拉动模式
+     */
+    public static final int MODE_FLEX = 1;
+    /**
+     * 层级拉动模式
+     */
+    public static final int MODE_LAYER = 2;
+    /**
+     * 抽屉拉动模式
+     */
+    public static final int MODE_DST = 3;
+    /**
+     * 当前状态
+     */
     private int mStatus;
-
+    /**
+     * 第一次加载视图
+     */
     private boolean layoutInflate;
-
+    /**
+     * Adapter模式
+     */
     private int refreshMode;
     private int loadMode;
-
-    private IRefresh refreshView;
-    private ILoad loadView;
-    private int refreshViewHeight = 0;
-    private int loadViewHeight = 0;
-
-    private View contentView;
-    /**
-     * 下拉刷新的拖动距离
-     */
-    private int refreshDistance = 0;
-    /**
-     * 上拉加载的拖动距离
-     */
-    private int loadDistance = 0;
     /**
      * 刷新、加载视图适配器
      */
     private Adapter refreshAdapter;
     private Adapter loadAdapter;
+    /**
+     * 上拉、下拉视图相关
+     */
+    private IRefresh iRefresh;
+    private ILoad iLoad;
+    private View refreshView;
+    private View loadView;
+    private int refreshViewHeight = 0;
+    private int loadViewHeight = 0;
+    /**
+     * 主体视图
+     */
+    private View contentView;
+    /**
+     * 下拉刷新、上拉加载拖动距离
+     */
+    private int refreshDistance = 0;
+    private int loadDistance = 0;
     /**
      * 上次触点位置，会随MOVE事件补正
      */
@@ -130,14 +160,21 @@ public class AnythingPullLayout extends ViewGroup {
      */
     private boolean refreshEnable = true;
     private boolean loadEnable = true;
-
+    /**
+     * 回弹动画
+     */
     private ValueAnimator animator;
     /**
      * 触摸阈值
      */
     private int touchSlop;
+    /**
+     * 滑动时取消事件
+     */
     private boolean hasCancel;
-
+    /**
+     * 回调监听
+     */
     private OnPullListener onPullListener;
 
     public AnythingPullLayout(Context context) {
@@ -152,14 +189,14 @@ public class AnythingPullLayout extends ViewGroup {
         super(context, attrs, defStyleAttr);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.AnythingPullLayout);
 
-        refreshMode = array.getInt(R.styleable.AnythingPullLayout_refresh_mode, 0);
+        refreshMode = array.getInt(R.styleable.AnythingPullLayout_refresh_mode, MODE_PULL);
         refreshResistance = array.getFloat(R.styleable.AnythingPullLayout_refresh_resistance, 1.6F);
         refreshCloseDuring = array.getInt(R.styleable.AnythingPullLayout_refresh_close_during, 300);
         refreshResultDuring = array.getInt(R.styleable.AnythingPullLayout_refresh_result_during, 750);
         refreshFixed = array.getBoolean(R.styleable.AnythingPullLayout_refresh_fixed, false);
         refreshEnable = array.getBoolean(R.styleable.AnythingPullLayout_refresh_enable, true);
 
-        loadMode = array.getInt(R.styleable.AnythingPullLayout_load_mode, 0);
+        loadMode = array.getInt(R.styleable.AnythingPullLayout_load_mode, MODE_PULL);
         loadResistance = array.getFloat(R.styleable.AnythingPullLayout_load_resistance, 1.6F);
         loadCloseDuring = array.getInt(R.styleable.AnythingPullLayout_load_close_during, 300);
         loadResultDuring = array.getInt(R.styleable.AnythingPullLayout_load_result_during, 750);
@@ -167,7 +204,7 @@ public class AnythingPullLayout extends ViewGroup {
         loadEnable = array.getBoolean(R.styleable.AnythingPullLayout_load_enable, true);
 
         array.recycle();
-        touchSlop = Utils.dp2px(1.5F);
+        touchSlop = Utils.dp2px(1);
     }
 
 
@@ -205,9 +242,12 @@ public class AnythingPullLayout extends ViewGroup {
         if (loadDistance < 0) {
             loadDistance = 0;
         }
+        int resultRefreshDistance = refreshDistance - refreshAdapter.pullConsumed(refreshDistance);
+        int resultLoasDistance = loadDistance - loadAdapter.pullConsumed(loadDistance);
         MarginLayoutParams lp = (MarginLayoutParams) contentView.getLayoutParams();
         int contentViewLeft = getPaddingLeft() + lp.leftMargin;
-        int contentViewTop = getPaddingTop() + +lp.topMargin + (refreshDistance - loadDistance);
+        int contentViewTop = getPaddingTop() + +lp.topMargin +
+                (resultRefreshDistance - resultLoasDistance);
         int contentViewRight = contentViewLeft + contentView.getMeasuredWidth();
         int contentViewBottom = contentViewTop + contentView.getMeasuredHeight();
 
@@ -219,11 +259,11 @@ public class AnythingPullLayout extends ViewGroup {
             if (mStatus == INIT) {
                 //第一次执行
                 mStatus = PRE_REFRESH;
-                if (refreshView != null) {
-                    refreshView.preShow();
+                if (iRefresh != null) {
+                    iRefresh.preShow();
                 }
             }
-            if (refreshView != null) {
+            if (iRefresh != null) {
                 if (refreshViewHeight > 0 && refreshDistance >= refreshViewHeight) {
                     if (mStatus != TO_REFRESH && mStatus != REFRESH_ING && mStatus != REFRESH_RESULT) {
                         //释放立即刷新，如果再刷新中就不重复
@@ -232,7 +272,7 @@ public class AnythingPullLayout extends ViewGroup {
                 } else if (mStatus != REFRESH_ING && mStatus != REFRESH_RESULT) {
                     mStatus = PRE_REFRESH;
                 }
-                refreshView.onPositionChange(touch, refreshDistance, mStatus);
+                iRefresh.onPositionChange(touch, refreshDistance, mStatus);
             }
 
         } else if (mode == 1) {
@@ -240,11 +280,11 @@ public class AnythingPullLayout extends ViewGroup {
             if (mStatus == INIT) {
                 //第一次执行
                 mStatus = PRE_LOAD;
-                if (loadView != null) {
-                    loadView.preShow();
+                if (iLoad != null) {
+                    iLoad.preShow();
                 }
             }
-            if (loadView != null) {
+            if (iLoad != null) {
                 if (loadViewHeight > 0 && loadDistance >= loadViewHeight) {
                     if (mStatus != TO_LOAD && mStatus != LOAD_ING && mStatus != LOAD_RESULT) {
                         //释放立即加载，如果再加载中就不重复
@@ -253,7 +293,7 @@ public class AnythingPullLayout extends ViewGroup {
                 } else if (mStatus != LOAD_ING && mStatus != LOAD_RESULT) {
                     mStatus = PRE_LOAD;
                 }
-                loadView.onPositionChange(touch, loadDistance, mStatus);
+                iLoad.onPositionChange(touch, loadDistance, mStatus);
             }
         }
     }
@@ -272,13 +312,13 @@ public class AnythingPullLayout extends ViewGroup {
                                  final int animDirection, final int mode, final @Status int toStatus) {
         switch (mStatus) {
             case PRE_REFRESH:
-                if (refreshView != null) {
-                    refreshView.preDismiss();
+                if (iRefresh != null) {
+                    iRefresh.preDismiss();
                 }
                 break;
             case PRE_LOAD:
-                if (loadView != null) {
-                    loadView.preDismiss();
+                if (iLoad != null) {
+                    iLoad.preDismiss();
                 }
                 break;
             default:
@@ -328,30 +368,30 @@ public class AnythingPullLayout extends ViewGroup {
         switch (toStatus) {
             case INIT:
                 if (animDirection == 1) {
-                    if (refreshView != null && mode == -1) {
-                        refreshView.onDismiss();
-                        refreshView.onPositionChange(false, 0, toStatus);
+                    if (iRefresh != null && mode == -1) {
+                        iRefresh.onDismiss();
+                        iRefresh.onPositionChange(false, 0, toStatus);
                     }
                 } else if (animDirection == -1) {
-                    if (loadView != null && mode == 1) {
-                        loadView.onDismiss();
-                        loadView.onPositionChange(false, 0, toStatus);
+                    if (iLoad != null && mode == 1) {
+                        iLoad.onDismiss();
+                        iLoad.onPositionChange(false, 0, toStatus);
                     }
                 }
                 break;
             case REFRESH_ING:
-                if (refreshView != null && mStatus != REFRESH_ING && mStatus != REFRESH_RESULT) {
-                    refreshView.onRefreshStart();
-                    refreshView.onPositionChange(false, refreshViewHeight, toStatus);
+                if (iRefresh != null && mStatus != REFRESH_ING && mStatus != REFRESH_RESULT) {
+                    iRefresh.onRefreshStart();
+                    iRefresh.onPositionChange(false, refreshViewHeight, toStatus);
                     if (onPullListener != null) {
                         onPullListener.onRefreshStart(this);
                     }
                 }
                 break;
             case LOAD_ING:
-                if (loadView != null && mStatus != LOAD_ING && mStatus != LOAD_RESULT) {
-                    loadView.onLoadStart();
-                    loadView.onPositionChange(false, loadViewHeight, toStatus);
+                if (iLoad != null && mStatus != LOAD_ING && mStatus != LOAD_RESULT) {
+                    iLoad.onLoadStart();
+                    iLoad.onPositionChange(false, loadViewHeight, toStatus);
                     if (onPullListener != null) {
                         onPullListener.onLoadStart(this);
                     }
@@ -380,54 +420,83 @@ public class AnythingPullLayout extends ViewGroup {
             return;
         }
         View child;
-        View rV = null;
-        View lV = null;
         for (int i = 0, count = getChildCount(); i < count; i++) {
             child = getChildAt(i);
             if (child instanceof IRefresh) {
-                refreshView = (IRefresh) child;
-                rV = child;
-                refreshViewHeight = child.getMeasuredHeight();
+                if (refreshMode != 1) {
+                    iRefresh = (IRefresh) child;
+                    refreshView = child;
+                    refreshViewHeight = child.getMeasuredHeight();
+                }
             } else if (child instanceof ILoad) {
-                loadView = (ILoad) child;
-                lV = child;
-                loadViewHeight = child.getMeasuredHeight();
+                if (loadMode != 1) {
+                    iLoad = (ILoad) child;
+                    loadView = child;
+                    loadViewHeight = child.getMeasuredHeight();
+                }
             } else {
                 contentView = child;
             }
         }
-        switch (refreshMode) {
-            case 0:
-                refreshAdapter = rV == null ? empterRefresh : new RefreshPullAdapter(rV);
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            default:
-                refreshAdapter = empterRefresh;
-                break;
-        }
-        switch (loadMode) {
-            case 0:
-                loadAdapter = lV == null ? empterLoad : new LoadPullAdapter(lV);
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            default:
-                loadAdapter = empterLoad;
-                break;
-        }
-        //根据Mode重排布局
-
+        initAdapterMode(refreshMode, loadMode);
         layoutInflate = true;
     }
+
+    public void initAdapterMode(int refreshMode, int loadMode) {
+        this.refreshMode = refreshMode;
+        this.loadMode = loadMode;
+        if (loadView == null) {
+            loadAdapter = empterLoadAdapter;
+        } else {
+            switch (loadMode) {
+                case MODE_PULL:
+                    loadAdapter = new LoadPullAdapter(loadView);
+                    break;
+                case MODE_LAYER:
+                    loadAdapter = new LoadLayerAdapter(loadView);
+                    loadView.bringToFront();
+                    break;
+                case MODE_DST:
+                    loadAdapter = new LoadDstAdapter(loadView);
+                    //失效，无法固定
+                    loadFixed = false;
+                    contentView.bringToFront();
+                    break;
+                default:
+                    loadAdapter = empterLoadAdapter;
+                    break;
+            }
+        }
+        if (refreshView == null) {
+            refreshAdapter = empterRefreshAdapter;
+        } else {
+            switch (refreshMode) {
+                case MODE_PULL:
+                    refreshAdapter = new RefreshPullAdapter(refreshView);
+                    break;
+                case MODE_LAYER:
+                    refreshAdapter = new RefreshLayerAdapter(refreshView);
+                    refreshView.bringToFront();
+                    break;
+                case MODE_DST:
+                    refreshAdapter = new RefreshDstAdapter(refreshView);
+                    //失效，无法固定
+                    refreshFixed = false;
+                    if (loadMode == MODE_LAYER) {
+                        contentView.bringToFront();
+                        loadView.bringToFront();
+                    } else if (loadMode == MODE_DST) {
+                        refreshView.bringToFront();
+                        contentView.bringToFront();
+                    }
+                    break;
+                default:
+                    refreshAdapter = empterRefreshAdapter;
+                    break;
+            }
+        }
+    }
+
 
     /**
      * 重写分发规则，防止requestDisallowInterceptTouchEvent
@@ -468,9 +537,7 @@ public class AnythingPullLayout extends ViewGroup {
                             }
                             cancelEvent(dy, event);
 
-                            int consumed = loadAdapter.pullConsumed(dy);
-                            loadDistance += (dy - consumed);
-
+                            loadDistance += dy;
                             layoutSelf(true, 1);
                             return true;
                         }
@@ -491,9 +558,8 @@ public class AnythingPullLayout extends ViewGroup {
                             return true;
                         }
                         cancelEvent(dy, event);
-                        int consumed = refreshAdapter.pullConsumed(dy);
-                        refreshDistance -= (dy - consumed);
 
+                        refreshDistance -= dy;
                         layoutSelf(true, -1);
                         return true;
                     }
@@ -510,9 +576,8 @@ public class AnythingPullLayout extends ViewGroup {
                                 return true;
                             }
                             cancelEvent(dy, event);
-                            int consumed = refreshAdapter.pullConsumed(dy);
-                            refreshDistance -= (dy - consumed);
 
+                            refreshDistance -= dy;
                             layoutSelf(true, -1);
                             return true;
                         }
@@ -534,14 +599,12 @@ public class AnythingPullLayout extends ViewGroup {
                             return true;
                         }
                         cancelEvent(dy, event);
-                        int consumed = loadAdapter.pullConsumed(dy);
-                        loadDistance += (dy - consumed);
 
+                        loadDistance += dy;
                         layoutSelf(true, 1);
                         return true;
                     }
                 }
-
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (refreshDistance > 0 && (refreshDistance < refreshViewHeight || refreshViewHeight == 0)) {
@@ -612,7 +675,7 @@ public class AnythingPullLayout extends ViewGroup {
      * 自动下拉刷新
      */
     public void autoRefresh() {
-        if (!refreshEnable) {
+        if (!refreshEnable || refreshMode == 1) {
             return;
         }
         postDelayed(new Runnable() {
@@ -627,7 +690,7 @@ public class AnythingPullLayout extends ViewGroup {
      * 自动上拉加载，注意load_mode
      */
     public void autoLoad() {
-        if (!loadEnable) {
+        if (!loadEnable || loadMode == 1) {
             return;
         }
         postDelayed(new Runnable() {
@@ -644,12 +707,12 @@ public class AnythingPullLayout extends ViewGroup {
      * @param success
      */
     public void responseRefresh(boolean success) {
-        if (refreshView != null && mStatus == REFRESH_ING) {
-            refreshView.onRefreshFinish(success);
+        if (iRefresh != null && mStatus == REFRESH_ING) {
+            iRefresh.onRefreshFinish(success);
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    refreshView.preDismiss();
+                    iRefresh.preDismiss();
                     processPosition(refreshDistance, 0, refreshCloseDuring, 1, -1, INIT);
                 }
             }, refreshResultDuring);
@@ -662,12 +725,12 @@ public class AnythingPullLayout extends ViewGroup {
      * @param success
      */
     public void responseload(boolean success) {
-        if (loadView != null && mStatus == LOAD_ING) {
-            loadView.onLoadFinish(success);
+        if (iLoad != null && mStatus == LOAD_ING) {
+            iLoad.onLoadFinish(success);
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    loadView.preDismiss();
+                    iLoad.preDismiss();
                     processPosition(loadDistance, 0, loadCloseDuring, -1, 1, INIT);
                 }
             }, loadResultDuring);
@@ -724,13 +787,13 @@ public class AnythingPullLayout extends ViewGroup {
         void onLoadStart(final AnythingPullLayout pullLayout);
     }
 
-    private static Adapter empterRefresh = new Adapter() {
+    private static Adapter empterRefreshAdapter = new ViewAdapter(null) {
         @Override
         public void layout(int distance, AnythingPullLayout pullLayout) {
 
         }
     };
-    private static Adapter empterLoad = new Adapter() {
+    private static Adapter empterLoadAdapter = new ViewAdapter(null) {
         @Override
         public void layout(int distance, AnythingPullLayout pullLayout) {
 

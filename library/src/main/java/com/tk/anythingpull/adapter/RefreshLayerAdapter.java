@@ -7,14 +7,20 @@ import com.tk.anythingpull.AnythingPullLayout;
 /**
  * <pre>
  *     author : TK
- *     time   : 2017/04/11
- *     desc   : 拉动式下拉刷新
+ *     time   : 2017/04/15
+ *     desc   : 布局层次下拉刷新
  * </pre>
  */
-public class RefreshPullAdapter extends ViewAdapter {
+public class RefreshLayerAdapter extends ViewAdapter {
 
-    public RefreshPullAdapter(View view) {
+    public RefreshLayerAdapter(View view) {
         super(view);
+    }
+
+    @Override
+    public int pullConsumed(int dy) {
+        //全额消耗
+        return dy;
     }
 
     @Override
@@ -24,5 +30,10 @@ public class RefreshPullAdapter extends ViewAdapter {
         int right = left + view.getMeasuredWidth();
         int bottom = top + view.getMeasuredHeight();
         view.layout(left, top, right, bottom);
+    }
+
+    @Override
+    public int layoutLayer() {
+        return 1;
     }
 }
