@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tk.anythingpull">
+    package="com.tk.sample">
 
     <application
         android:allowBackup="true"
@@ -8,53 +8,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="com.tk.sample.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ScrollViewActivity" />
-        <activity android:name=".activity.ListViewActivity" />
-        <activity android:name=".activity.RecyclerViewActivity" />
-        <activity android:name=".activity.LayoutActivity" />
-        <activity android:name=".activity.NestedScrollViewActivity" />
-        <activity android:name=".scrollview.FFScrollViewActivity" />
-        <activity android:name=".scrollview.RLScrollViewActivity" />
-        <activity android:name=".scrollview.NFScrollViewActivity" />
-        <activity android:name=".scrollview.FLScrollViewActivity" />
-        <activity android:name=".scrollview.FNScrollViewActivity" />
-        <activity android:name=".scrollview.RNScrollViewActivity" />
-        <activity android:name=".scrollview.RFScrollViewActivity" />
-        <activity android:name=".scrollview.NLScrollViewActivity" />
+        <activity android:name="com.tk.sample.activity.ScrollViewActivity" />
+        <activity android:name="com.tk.sample.activity.ListViewActivity" />
+        <activity android:name="com.tk.sample.activity.RecyclerViewActivity" />
+        <activity android:name="com.tk.sample.activity.LayoutActivity" />
+        <activity android:name="com.tk.sample.activity.NestedScrollViewActivity" />
 
-        <activity android:name=".recyclerview.FFRecyclerViewActivity" />
-        <activity android:name=".recyclerview.FLRecyclerViewActivity" />
-        <activity android:name=".recyclerview.FNRecyclerViewActivity" />
-        <activity android:name=".recyclerview.NFRecyclerViewActivity" />
-        <activity android:name=".recyclerview.NLRecyclerViewActivity" />
-        <activity android:name=".recyclerview.RFRecyclerViewActivity" />
-        <activity android:name=".recyclerview.RLRecyclerViewActivity" />
-        <activity android:name=".recyclerview.RNRecyclerViewActivity" />
-
-        <activity android:name=".listview.FFListViewActivity" />
-        <activity android:name=".listview.FLListViewActivity" />
-        <activity android:name=".listview.FNListViewActivity" />
-        <activity android:name=".listview.NFListViewActivity" />
-        <activity android:name=".listview.NLListViewActivity" />
-        <activity android:name=".listview.RFListViewActivity" />
-        <activity android:name=".listview.RLListViewActivity" />
-        <activity android:name=".listview.RNListViewActivity" />
-
-        <activity android:name=".layout.FFLayoutViewActivity" />
-        <activity android:name=".layout.FLLayoutViewActivity" />
-        <activity android:name=".layout.FNLayoutViewActivity" />
-        <activity android:name=".layout.NFLayoutViewActivity" />
-        <activity android:name=".layout.NLLayoutViewActivity" />
-        <activity android:name=".layout.RFLayoutViewActivity" />
-        <activity android:name=".layout.RLLayoutViewActivity" />
-        <activity android:name=".layout.RNLayoutViewActivity" />
     </application>
 
 </manifest>

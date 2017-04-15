@@ -4,35 +4,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tk.library.AnythingPullLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.tk.anythingpull.AnythingPullLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pull_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.tk.sample.view.PullRefreshView
+            android:id="@+id/refresh_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:background="@color/colorPrimary" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:background="@color/colorAccent" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:background="@color/colorPrimaryDark" />
-            </LinearLayout>
+            <include layout="@layout/include_data" />
         </ScrollView>
-    </com.tk.library.AnythingPullLayout>
+
+        <com.tk.sample.view.PullLoadView
+            android:id="@+id/load_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.tk.anythingpull.AnythingPullLayout>
 </LinearLayout>

@@ -12,16 +12,16 @@
         app:title="AnythingPull"
         app:titleTextColor="@android:color/white" />
 
-    <com.tk.library.AnythingPullLayout
+    <com.tk.anythingpull.AnythingPullLayout
         android:id="@+id/pull_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.tk.anythingpull.recyclerview.view.NYRecyclerview
+        <com.tk.sample.recyclerview.view.NYRecyclerview
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never" />
 
-    </com.tk.library.AnythingPullLayout>
+    </com.tk.anythingpull.AnythingPullLayout>
 </LinearLayout>

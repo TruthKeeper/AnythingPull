@@ -13,14 +13,17 @@
             <enum name="layer" value="2" />
             <enum name="dst" value="3" />
         </attr>
-
+        <!--阻力-->
         <attr name="refresh_resistance" format="float" />
         <attr name="load_resistance" format="float" />
-
-        <attr name="refresh_during" format="integer" />
-        <attr name="load_during" format="integer" />
-
-        <attr name="refresh_over_during" format="integer" />
-        <attr name="load_over_during" format="integer" />
+        <!--回弹的时长-->
+        <attr name="refresh_close_during" format="integer" />
+        <attr name="load_close_during" format="integer" />
+        <!--结果停留时长-->
+        <attr name="refresh_result_during" format="integer" />
+        <attr name="load_result_during" format="integer" />
+        <!--刷新中和加载中视图固定-->
+        <attr name="refresh_fixed" format="boolean" />
+        <attr name="load_fixed" format="boolean" />
     </declare-styleable>
 </resources>

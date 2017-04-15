@@ -4,19 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tk.library.AnythingPullLayout
+    <com.tk.anythingpull.AnythingPullLayout
         android:id="@+id/pull_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
 
-        <com.tk.anythingpull.layout.view.NYLayoutview
+        <com.tk.sample.layout.view.NYLayoutview
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <include layout="@layout/test_layout" />
-        </com.tk.anythingpull.layout.view.NYLayoutview>
+        </com.tk.sample.layout.view.NYLayoutview>
 
-    </com.tk.library.AnythingPullLayout>
+    </com.tk.anythingpull.AnythingPullLayout>
 </LinearLayout>

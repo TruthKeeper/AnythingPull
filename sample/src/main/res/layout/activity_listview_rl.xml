@@ -4,25 +4,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.tk.library.AnythingPullLayout
+    <com.tk.anythingpull.AnythingPullLayout
         android:id="@+id/pull_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.tk.anythingpull.view.TestHeadView
+        <com.tk.sample.view.PullRefreshView
             android:id="@+id/headerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.tk.anythingpull.listview.view.PullListView
+        <com.tk.sample.listview.view.PullListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never" />
 
-        <com.tk.anythingpull.view.TestFootView
+        <com.tk.sample.view.PullLoadView
             android:id="@+id/footview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </com.tk.library.AnythingPullLayout>
+    </com.tk.anythingpull.AnythingPullLayout>
 </LinearLayout>

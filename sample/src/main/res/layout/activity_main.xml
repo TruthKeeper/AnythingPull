@@ -33,13 +33,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="自动下拉刷新" />
+
+            <CheckBox
+                android:id="@+id/cbx_refresh_fixed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="刷新视图固定" />
         </LinearLayout>
 
         <RadioGroup
             android:id="@+id/rgp_refresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbtn_refresh_none"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="禁用" />
 
             <RadioButton
                 android:id="@+id/rbtn_refresh_pull"
@@ -87,13 +99,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="自动上拉加载" />
+
+            <CheckBox
+                android:id="@+id/cbx_load_fixed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="加载视图固定" />
         </LinearLayout>
 
         <RadioGroup
             android:id="@+id/rgp_load"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbtn_load_none"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="禁用" />
 
             <RadioButton
                 android:id="@+id/rbtn_load_pull"
@@ -171,8 +195,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:weightSum="3">
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/btn_nested"
@@ -198,6 +221,16 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
+            <TextView
+                android:id="@+id/btn_crazy"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:text="复杂场景"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>
