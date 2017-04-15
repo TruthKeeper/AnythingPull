@@ -9,11 +9,6 @@ package com.tk.anythingpull;
  */
 public interface ILoad extends Action {
     /**
-     * 准备加载，即 手指释放时可以触发加载
-     */
-    void preLoad();
-
-    /**
      * 开始加载
      */
     void onLoadStart();

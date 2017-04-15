@@ -8,10 +8,6 @@ package com.tk.anythingpull;
  * </pre>
  */
 public interface IRefresh extends Action {
-    /**
-     * 准备刷新，即 手指释放时可以触发刷新
-     */
-    void preRefresh();
 
     /**
      * 开始刷新

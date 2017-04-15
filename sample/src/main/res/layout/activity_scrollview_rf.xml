@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.tk.sample.view.PullRefreshView
+        <com.tk.sample.view.RefreshView
             android:id="@+id/headerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

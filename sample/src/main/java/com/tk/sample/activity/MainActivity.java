@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.tk.sample.Config;
 import com.tk.sample.R;
 
 /**
@@ -19,7 +20,6 @@ import com.tk.sample.R;
  * </pre>
  */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private CheckBox cbxAutoRefresh;
     private CheckBox cbxRefreshFixed;
     private RadioGroup rgpRefresh;
     private RadioButton rbtnRefreshNone;
@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RadioButton rbtnRefreshFlex;
     private RadioButton rbtnRefreshLayer;
     private RadioButton rbtnRefreshDst;
-    private CheckBox cbxAutoLoad;
     private CheckBox cbxLoadFixed;
     private RadioGroup rgpLoad;
     private RadioButton rbtnLoadNone;
@@ -50,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initViews() {
-        cbxAutoRefresh = (CheckBox) findViewById(R.id.cbx_auto_refresh);
         cbxRefreshFixed = (CheckBox) findViewById(R.id.cbx_refresh_fixed);
         rgpRefresh = (RadioGroup) findViewById(R.id.rgp_refresh);
         rbtnRefreshNone = (RadioButton) findViewById(R.id.rbtn_refresh_none);
@@ -58,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rbtnRefreshFlex = (RadioButton) findViewById(R.id.rbtn_refresh_flex);
         rbtnRefreshLayer = (RadioButton) findViewById(R.id.rbtn_refresh_layer);
         rbtnRefreshDst = (RadioButton) findViewById(R.id.rbtn_refresh_dst);
-        cbxAutoLoad = (CheckBox) findViewById(R.id.cbx_auto_load);
         cbxLoadFixed = (CheckBox) findViewById(R.id.cbx_load_fixed);
         rgpLoad = (RadioGroup) findViewById(R.id.rgp_load);
         rbtnLoadNone = (RadioButton) findViewById(R.id.rbtn_load_none);
@@ -84,9 +81,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
             case R.id.btn_scrollview:
-                startActivity(new Intent(this, ScrollViewActivity.class));
+                intent = new Intent(this, ScrollViewActivity.class);
+                intent.putExtra("config", initConfig());
+                startActivity(intent);
                 break;
             case R.id.btn_listview:
                 break;
@@ -99,5 +99,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_crazy:
                 break;
         }
+    }
+
+    private Config initConfig() {
+        Config config = new Config();
+        config.refreshFixed = cbxRefreshFixed.isChecked();
+        switch (rgpRefresh.getCheckedRadioButtonId()) {
+            case R.id.rbtn_refresh_none:
+                config.refreshEnable = false;
+                break;
+            case R.id.rbtn_refresh_pull:
+                config.refreshMode = 0;
+                break;
+            case R.id.rbtn_refresh_flex:
+                config.refreshMode = 1;
+                break;
+            case R.id.rbtn_refresh_layer:
+                config.refreshMode = 2;
+                break;
+            case R.id.rbtn_refresh_dst:
+                config.refreshMode = 3;
+                break;
+        }
+
+        config.loadFixed = cbxLoadFixed.isChecked();
+        switch (rgpLoad.getCheckedRadioButtonId()) {
+            case R.id.rbtn_load_none:
+                config.loadEnable = false;
+                break;
+            case R.id.rbtn_load_pull:
+                config.loadMode = 0;
+                break;
+            case R.id.rbtn_load_flex:
+                config.loadMode = 1;
+                break;
+            case R.id.rbtn_load_layer:
+                config.loadMode = 2;
+                break;
+            case R.id.rbtn_load_dst:
+                config.loadMode = 3;
+                break;
+        }
+        return config;
     }
 }

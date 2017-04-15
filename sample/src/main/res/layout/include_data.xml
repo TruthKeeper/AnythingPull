@@ -15,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:id="@+id/btn"
         android:text="我是一个按钮" />
 
     <android.support.v7.widget.AppCompatSeekBar

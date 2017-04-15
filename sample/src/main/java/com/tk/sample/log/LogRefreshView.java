@@ -31,7 +31,7 @@ public class LogRefreshView extends LinearLayout implements IRefresh {
 
     public LogRefreshView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.refresh_pull_layout, this);
+        LayoutInflater.from(context).inflate(R.layout.refresh_log_layout, this);
         tvDistance = (TextView) findViewById(R.id.tv_distance);
         tvStatus = (TextView) findViewById(R.id.tv_status);
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
@@ -79,12 +79,6 @@ public class LogRefreshView extends LinearLayout implements IRefresh {
             default:
                 break;
         }
-    }
-
-    @Override
-    public void preRefresh() {
-        Log.e(TAG, "preRefresh: ");
-        tvStatus.setText("释放立即刷新");
     }
 
     @Override

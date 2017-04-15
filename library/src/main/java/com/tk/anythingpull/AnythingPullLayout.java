@@ -9,6 +9,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -119,15 +120,23 @@ public class AnythingPullLayout extends ViewGroup {
      */
     private int refreshResultDuring;
     private int loadResultDuring;
-
+    /**
+     * 刷新、加载视图固定
+     */
     private boolean refreshFixed;
     private boolean loadFixed;
+    /**
+     * 是否开启下拉刷新、上拉加载功能
+     */
+    private boolean refreshEnable = true;
+    private boolean loadEnable = true;
 
     private ValueAnimator animator;
     /**
      * 触摸阈值
      */
     private int touchSlop;
+    private boolean hasCancel;
 
     private OnPullListener onPullListener;
 
@@ -147,13 +156,15 @@ public class AnythingPullLayout extends ViewGroup {
         refreshResistance = array.getFloat(R.styleable.AnythingPullLayout_refresh_resistance, 1.6F);
         refreshCloseDuring = array.getInt(R.styleable.AnythingPullLayout_refresh_close_during, 300);
         refreshResultDuring = array.getInt(R.styleable.AnythingPullLayout_refresh_result_during, 750);
-        refreshFixed = array.getBoolean(R.styleable.AnythingPullLayout_refresh_fixed, true);
+        refreshFixed = array.getBoolean(R.styleable.AnythingPullLayout_refresh_fixed, false);
+        refreshEnable = array.getBoolean(R.styleable.AnythingPullLayout_refresh_enable, true);
 
         loadMode = array.getInt(R.styleable.AnythingPullLayout_load_mode, 0);
         loadResistance = array.getFloat(R.styleable.AnythingPullLayout_load_resistance, 1.6F);
         loadCloseDuring = array.getInt(R.styleable.AnythingPullLayout_load_close_during, 300);
         loadResultDuring = array.getInt(R.styleable.AnythingPullLayout_load_result_during, 750);
         loadFixed = array.getBoolean(R.styleable.AnythingPullLayout_load_fixed, false);
+        loadEnable = array.getBoolean(R.styleable.AnythingPullLayout_load_enable, true);
 
         array.recycle();
         touchSlop = Utils.dp2px(1.5F);
@@ -215,9 +226,8 @@ public class AnythingPullLayout extends ViewGroup {
             if (refreshView != null) {
                 if (refreshViewHeight > 0 && refreshDistance >= refreshViewHeight) {
                     if (mStatus != TO_REFRESH && mStatus != REFRESH_ING && mStatus != REFRESH_RESULT) {
-                        //执行一次，如果再刷新中就不重复执行刷新
+                        //释放立即刷新，如果再刷新中就不重复
                         mStatus = TO_REFRESH;
-                        refreshView.preRefresh();
                     }
                 } else if (mStatus != REFRESH_ING && mStatus != REFRESH_RESULT) {
                     mStatus = PRE_REFRESH;
@@ -237,9 +247,8 @@ public class AnythingPullLayout extends ViewGroup {
             if (loadView != null) {
                 if (loadViewHeight > 0 && loadDistance >= loadViewHeight) {
                     if (mStatus != TO_LOAD && mStatus != LOAD_ING && mStatus != LOAD_RESULT) {
-                        //执行一次
+                        //释放立即加载，如果再加载中就不重复
                         mStatus = TO_LOAD;
-                        loadView.preLoad();
                     }
                 } else if (mStatus != LOAD_ING && mStatus != LOAD_RESULT) {
                     mStatus = PRE_LOAD;
@@ -249,8 +258,18 @@ public class AnythingPullLayout extends ViewGroup {
         }
     }
 
-    private void generateAnim(int from, int to, int during,
-                              final int animDirection, final @Status int toStatus) {
+    /**
+     * 处理位置变化
+     *
+     * @param from          距离
+     * @param to            距离
+     * @param during        时长
+     * @param animDirection 动画方向 1 向上
+     * @param mode          -1：下拉 1：上拉
+     * @param toStatus      最终状态
+     */
+    private void processPosition(int from, int to, int during,
+                                 final int animDirection, final int mode, final @Status int toStatus) {
         switch (mStatus) {
             case PRE_REFRESH:
                 if (refreshView != null) {
@@ -273,12 +292,12 @@ public class AnythingPullLayout extends ViewGroup {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int i = (int) animation.getAnimatedValue();
-                if (animDirection == 1) {
+                if (mode == -1) {
                     refreshDistance = i;
-                } else if (animDirection == -1) {
+                } else if (mode == 1) {
                     loadDistance = i;
                 }
-                layoutSelf(false, -animDirection);
+                layoutSelf(false, mode);
             }
         });
         animator.addListener(new Animator.AnimatorListener() {
@@ -289,7 +308,7 @@ public class AnythingPullLayout extends ViewGroup {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                onAnimEnd(animDirection, toStatus);
+                onAnimEnd(animDirection, mode, toStatus);
             }
 
             @Override
@@ -305,16 +324,16 @@ public class AnythingPullLayout extends ViewGroup {
         animator.start();
     }
 
-    private void onAnimEnd(final int animDirection, final @Status int toStatus) {
+    private void onAnimEnd(final int animDirection, final int mode, final @Status int toStatus) {
         switch (toStatus) {
             case INIT:
                 if (animDirection == 1) {
-                    if (refreshView != null) {
+                    if (refreshView != null && mode == -1) {
                         refreshView.onDismiss();
                         refreshView.onPositionChange(false, 0, toStatus);
                     }
                 } else if (animDirection == -1) {
-                    if (loadView != null) {
+                    if (loadView != null && mode == 1) {
                         loadView.onDismiss();
                         loadView.onPositionChange(false, 0, toStatus);
                     }
@@ -427,25 +446,28 @@ public class AnythingPullLayout extends ViewGroup {
                 if (animator != null && animator.isRunning()) {
                     animator.cancel();
                 }
+                hasCancel = false;
                 lastY = (int) event.getY();
                 super.dispatchTouchEvent(event);
                 return true;
             case MotionEvent.ACTION_MOVE:
                 //下拉上拉不允许同时存在
+
+                int dy = (int) (lastY - event.getY());
                 if (event.getY() > lastY) {
                     //下拉
-                    int dy;
                     if (ViewCompat.canScrollVertically(contentView, -1)) {
                         if (loadDistance > 0) {
                             if (loadFixed && (mStatus == LOAD_ING || mStatus == LOAD_RESULT)) {
                                 break;
                             }
-                            //上拉过程中下拉，默认无阻力
-                            dy = (int) (lastY - event.getY());
                             lastY = (int) event.getY();
+                            //上拉过程中下拉，默认无阻力
                             if (!checkLoad(dy)) {
                                 return true;
                             }
+                            cancelEvent(dy, event);
+
                             int consumed = loadAdapter.pullConsumed(dy);
                             loadDistance += (dy - consumed);
 
@@ -455,16 +477,20 @@ public class AnythingPullLayout extends ViewGroup {
                         break;
                     } else {
                         //内容区域下拉到顶了
+                        if (!refreshEnable) {
+                            break;
+                        }
                         if (loadDistance > 0) {
                             //上拉加载部分尚在显示中
                             break;
                         }
                         //阻力
-                        dy = (int) ((lastY - event.getY()) / refreshResistance);
+                        dy = (int) (dy / refreshResistance);
                         lastY = (int) event.getY();
                         if (!checkRefresh(dy)) {
                             return true;
                         }
+                        cancelEvent(dy, event);
                         int consumed = refreshAdapter.pullConsumed(dy);
                         refreshDistance -= (dy - consumed);
 
@@ -473,18 +499,17 @@ public class AnythingPullLayout extends ViewGroup {
                     }
                 } else {
                     //上拉
-                    int dy;
                     if (ViewCompat.canScrollVertically(contentView, 1)) {
                         if (refreshDistance > 0) {
                             if (refreshFixed && (mStatus == REFRESH_ING || mStatus == REFRESH_RESULT)) {
                                 break;
                             }
                             //下拉状态中上拉，默认无阻力
-                            dy = (int) (lastY - event.getY());
                             lastY = (int) event.getY();
                             if (!checkRefresh(dy)) {
                                 return true;
                             }
+                            cancelEvent(dy, event);
                             int consumed = refreshAdapter.pullConsumed(dy);
                             refreshDistance -= (dy - consumed);
 
@@ -495,16 +520,20 @@ public class AnythingPullLayout extends ViewGroup {
                         break;
                     } else {
                         //内容区域上拉到底了
+                        if (!loadEnable) {
+                            break;
+                        }
                         if (refreshDistance > 0) {
                             //下拉刷新部分尚在显示中
                             break;
                         }
                         //阻力
-                        dy = (int) ((lastY - event.getY()) / loadResistance);
+                        dy = (int) (dy / loadResistance);
                         lastY = (int) event.getY();
                         if (!checkLoad(dy)) {
                             return true;
                         }
+                        cancelEvent(dy, event);
                         int consumed = loadAdapter.pullConsumed(dy);
                         loadDistance += (dy - consumed);
 
@@ -512,29 +541,27 @@ public class AnythingPullLayout extends ViewGroup {
                         return true;
                     }
                 }
+
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (refreshDistance > 0 && (refreshDistance < refreshViewHeight || refreshViewHeight == 0)) {
                     //回弹<下拉刷新部分>
-                    if (mStatus == REFRESH_ING || mStatus == REFRESH_RESULT) {
-                        break;
-                    }
-                    generateAnim(refreshDistance, 0, refreshCloseDuring, 1, INIT);
+                    processPosition(refreshDistance, 0, refreshCloseDuring, 1, -1, INIT);
                     break;
                 }
                 if (refreshDistance >= refreshViewHeight && refreshViewHeight > 0) {
                     //回弹至触发下拉刷新
-                    generateAnim(refreshDistance, refreshViewHeight, refreshCloseDuring, 1, REFRESH_ING);
+                    processPosition(refreshDistance, refreshViewHeight, refreshCloseDuring, 1, -1, REFRESH_ING);
                     break;
                 }
                 if (loadDistance > 0 && (loadDistance < loadViewHeight || loadViewHeight == 0)) {
                     //回弹<上拉加载部分>
-                    generateAnim(loadDistance, 0, loadCloseDuring, -1, INIT);
+                    processPosition(loadDistance, 0, loadCloseDuring, -1, 1, INIT);
                     break;
                 }
                 if (loadDistance >= loadViewHeight && loadViewHeight > 0) {
                     //回弹至触发下拉刷新
-                    generateAnim(loadDistance, loadViewHeight, loadCloseDuring, -1, LOAD_ING);
+                    processPosition(loadDistance, loadViewHeight, loadCloseDuring, -1, 1, LOAD_ING);
                     break;
                 }
                 break;
@@ -543,6 +570,16 @@ public class AnythingPullLayout extends ViewGroup {
         }
         lastY = (int) event.getY();
         return super.dispatchTouchEvent(event);
+    }
+
+    private void cancelEvent(int dy, MotionEvent event) {
+        if (Math.abs(dy) > touchSlop && (!hasCancel)) {
+            //cancel事件
+            MotionEvent e = MotionEvent.obtain(event.getDownTime(), event.getEventTime() + ViewConfiguration.getLongPressTimeout(),
+                    MotionEvent.ACTION_CANCEL, event.getX(), event.getY(), event.getMetaState());
+            super.dispatchTouchEvent(e);
+            hasCancel = true;
+        }
     }
 
     /**
@@ -572,7 +609,38 @@ public class AnythingPullLayout extends ViewGroup {
     }
 
     /**
+     * 自动下拉刷新
+     */
+    public void autoRefresh() {
+        if (!refreshEnable) {
+            return;
+        }
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                processPosition(0, refreshViewHeight, refreshCloseDuring, -1, -1, REFRESH_ING);
+            }
+        }, 500);
+    }
+
+    /**
+     * 自动上拉加载，注意load_mode
+     */
+    public void autoLoad() {
+        if (!loadEnable) {
+            return;
+        }
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                processPosition(0, loadViewHeight, loadCloseDuring, 1, 1, LOAD_ING);
+            }
+        }, 500);
+    }
+
+    /**
      * 下拉刷新回调
+     *
      * @param success
      */
     public void responseRefresh(boolean success) {
@@ -582,7 +650,7 @@ public class AnythingPullLayout extends ViewGroup {
                 @Override
                 public void run() {
                     refreshView.preDismiss();
-                    generateAnim(refreshDistance, 0, refreshCloseDuring, 1, INIT);
+                    processPosition(refreshDistance, 0, refreshCloseDuring, 1, -1, INIT);
                 }
             }, refreshResultDuring);
         }
@@ -590,6 +658,7 @@ public class AnythingPullLayout extends ViewGroup {
 
     /**
      * 上拉结果回调
+     *
      * @param success
      */
     public void responseload(boolean success) {
@@ -599,10 +668,50 @@ public class AnythingPullLayout extends ViewGroup {
                 @Override
                 public void run() {
                     loadView.preDismiss();
-                    generateAnim(loadDistance, 0, loadCloseDuring, -1, INIT);
+                    processPosition(loadDistance, 0, loadCloseDuring, -1, 1, INIT);
                 }
             }, loadResultDuring);
         }
+    }
+
+    /**
+     * 禁用下拉刷新功能，建议xml配置
+     *
+     * @param refreshEnable
+     */
+    @Deprecated
+    public void setRefreshEnable(boolean refreshEnable) {
+        this.refreshEnable = refreshEnable;
+    }
+
+    /**
+     * 禁用上拉加载功能，建议xml配置
+     *
+     * @param loadEnable
+     */
+    @Deprecated
+    public void setLoadEnable(boolean loadEnable) {
+        this.loadEnable = loadEnable;
+    }
+
+    /**
+     * 下拉刷新部分是否固定，建议xml配置
+     *
+     * @param refreshFixed
+     */
+    @Deprecated
+    public void setRefreshFixed(boolean refreshFixed) {
+        this.refreshFixed = refreshFixed;
+    }
+
+    /**
+     * 上拉加载部分是否固定，建议xml配置
+     *
+     * @param loadFixed
+     */
+    @Deprecated
+    public void setLoadFixed(boolean loadFixed) {
+        this.loadFixed = loadFixed;
     }
 
     public void setOnPullListener(OnPullListener onPullListener) {

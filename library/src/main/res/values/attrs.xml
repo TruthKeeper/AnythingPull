@@ -25,5 +25,8 @@
         <!--刷新中和加载中视图固定-->
         <attr name="refresh_fixed" format="boolean" />
         <attr name="load_fixed" format="boolean" />
+        <!--刷新和加载功能开启-->
+        <attr name="refresh_enable" format="boolean" />
+        <attr name="load_enable" format="boolean" />
     </declare-styleable>
 </resources>

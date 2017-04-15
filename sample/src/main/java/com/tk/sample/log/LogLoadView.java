@@ -31,7 +31,7 @@ public class LogLoadView extends LinearLayout implements ILoad {
 
     public LogLoadView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.load_pull_layout, this);
+        LayoutInflater.from(context).inflate(R.layout.load_log_layout, this);
         tvDistance = (TextView) findViewById(R.id.tv_distance);
         tvStatus = (TextView) findViewById(R.id.tv_status);
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
@@ -79,12 +79,6 @@ public class LogLoadView extends LinearLayout implements ILoad {
             default:
                 break;
         }
-    }
-
-    @Override
-    public void preLoad() {
-        Log.e(TAG, "preLoad: ");
-        tvStatus.setText("释放立即加载");
     }
 
     @Override

@@ -29,12 +29,6 @@
                 android:textSize="18sp" />
 
             <CheckBox
-                android:id="@+id/cbx_auto_refresh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="自动下拉刷新" />
-
-            <CheckBox
                 android:id="@+id/cbx_refresh_fixed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,11 +88,6 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp" />
 
-            <CheckBox
-                android:id="@+id/cbx_auto_load"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="自动上拉加载" />
 
             <CheckBox
                 android:id="@+id/cbx_load_fixed"

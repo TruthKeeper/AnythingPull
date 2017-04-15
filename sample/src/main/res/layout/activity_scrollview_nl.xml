@@ -24,7 +24,7 @@
             </LinearLayout>
         </com.tk.sample.scrollview.view.NYScrollview>
 
-        <com.tk.sample.view.PullLoadView
+        <com.tk.sample.view.LoadView
             android:id="@+id/footview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
