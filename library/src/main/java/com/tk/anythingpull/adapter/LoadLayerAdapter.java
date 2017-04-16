@@ -33,7 +33,7 @@ public class LoadLayerAdapter extends ViewAdapter {
     }
 
     @Override
-    public int layoutLayer() {
+    public int getLayer() {
         return 1;
     }
 }

@@ -17,7 +17,7 @@ public abstract class ViewAdapter extends Adapter {
     }
 
     @Override
-    public int layoutLayer() {
+    public int getLayer() {
         return 0;
     }
 }

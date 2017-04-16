@@ -31,6 +31,6 @@ public abstract class Adapter {
      *
      * @return
      */
-    public abstract int layoutLayer();
+    public abstract int getLayer();
 
 }

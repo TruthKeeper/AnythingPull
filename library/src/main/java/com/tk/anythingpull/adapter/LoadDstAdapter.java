@@ -27,7 +27,7 @@ public class LoadDstAdapter extends ViewAdapter {
     }
 
     @Override
-    public int layoutLayer() {
+    public int getLayer() {
         return -1;
     }
 }

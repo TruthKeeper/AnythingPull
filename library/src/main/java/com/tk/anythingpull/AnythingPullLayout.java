@@ -454,13 +454,11 @@ public class AnythingPullLayout extends ViewGroup {
                     break;
                 case MODE_LAYER:
                     loadAdapter = new LoadLayerAdapter(loadView);
-                    loadView.bringToFront();
                     break;
                 case MODE_DST:
                     loadAdapter = new LoadDstAdapter(loadView);
                     //失效，无法固定
                     loadFixed = false;
-                    contentView.bringToFront();
                     break;
                 default:
                     loadAdapter = empterLoadAdapter;
@@ -476,27 +474,66 @@ public class AnythingPullLayout extends ViewGroup {
                     break;
                 case MODE_LAYER:
                     refreshAdapter = new RefreshLayerAdapter(refreshView);
-                    refreshView.bringToFront();
                     break;
                 case MODE_DST:
                     refreshAdapter = new RefreshDstAdapter(refreshView);
                     //失效，无法固定
                     refreshFixed = false;
-                    if (loadMode == MODE_LAYER) {
-                        contentView.bringToFront();
-                        loadView.bringToFront();
-                    } else if (loadMode == MODE_DST) {
-                        refreshView.bringToFront();
-                        contentView.bringToFront();
-                    }
                     break;
                 default:
                     refreshAdapter = empterRefreshAdapter;
                     break;
             }
         }
+        initLayer();
     }
 
+    private void initLayer() {
+        int refreshLayer = refreshAdapter.getLayer();
+        int loadLayer = loadAdapter.getLayer();
+        if (loadLayer > 0) {
+            if (refreshLayer > 0) {
+                loadFront();
+                refreshFront();
+            } else {
+                contentFront();
+                loadFront();
+            }
+        } else if (loadLayer == 0) {
+            if (refreshLayer < 0) {
+                loadFront();
+                contentFront();
+            } else {
+                refreshFront();
+            }
+        } else {
+            if (refreshLayer < 0) {
+                refreshFront();
+                contentFront();
+            } else {
+                contentFront();
+                refreshFront();
+            }
+        }
+    }
+
+    private void refreshFront() {
+        if (refreshView != null) {
+            refreshView.bringToFront();
+        }
+    }
+
+    private void contentFront() {
+        if (contentView != null) {
+            contentView.bringToFront();
+        }
+    }
+
+    private void loadFront() {
+        if (loadView != null) {
+            loadView.bringToFront();
+        }
+    }
 
     /**
      * 重写分发规则，防止requestDisallowInterceptTouchEvent
