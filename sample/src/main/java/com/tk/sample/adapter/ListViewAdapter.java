@@ -7,21 +7,26 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.tk.sample.R;
-import com.tk.sample.DataUtils;
+
+import java.util.List;
 
 /**
- * Created by TK on 2016/7/25.
+ * <pre>
+ *     author : TK
+ *     time   : 2017/04/16
+ *     desc   : Adapter For ListView
+ * </pre>
  */
 public class ListViewAdapter extends BaseAdapter {
-    private String[] data;
+    private List<String> list;
 
-    public ListViewAdapter() {
-        data = DataUtils.initData();
+    public ListViewAdapter(List<String> list) {
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return data.length;
+        return list.size();
     }
 
     @Override
@@ -37,9 +42,9 @@ public class ListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_test, parent, false);
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_test, parent, false);
         }
-        ((TextView) convertView).setText(data[position]);
+        ((TextView) convertView).setText(list.get(position));
         return convertView;
     }
 }

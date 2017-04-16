@@ -24,16 +24,10 @@ public class ScrollViewActivity extends AppCompatActivity implements AnythingPul
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrollview);
-
         pullLayout = (AnythingPullLayout) findViewById(R.id.pull_layout);
+
         Config config = getIntent().getParcelableExtra("config");
-        pullLayout.setRefreshEnable(config.refreshEnable);
-        pullLayout.setLoadEnable(config.loadEnable);
-
-        pullLayout.setRefreshFixed(config.refreshFixed);
-        pullLayout.setLoadFixed(config.loadFixed);
-
-        pullLayout.initAdapterMode(config.refreshMode, config.loadMode);
+        config.attachToLayout(pullLayout);
 
         pullLayout.setOnPullListener(this);
 

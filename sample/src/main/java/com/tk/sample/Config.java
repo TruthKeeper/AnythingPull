@@ -3,6 +3,8 @@ package com.tk.sample;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.tk.anythingpull.AnythingPullLayout;
+
 /**
  * <pre>
  *     author : TK
@@ -57,4 +59,14 @@ public class Config implements Parcelable {
             return new Config[size];
         }
     };
+
+    public void attachToLayout(AnythingPullLayout pullLayout) {
+        pullLayout.setRefreshEnable(refreshEnable);
+        pullLayout.setLoadEnable(loadEnable);
+
+        pullLayout.setRefreshFixed(refreshFixed);
+        pullLayout.setLoadFixed(loadFixed);
+
+        pullLayout.initAdapterMode(refreshMode, loadMode);
+    }
 }

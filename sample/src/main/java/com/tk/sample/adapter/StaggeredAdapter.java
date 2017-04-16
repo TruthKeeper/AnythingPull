@@ -19,12 +19,11 @@ public class StaggeredAdapter extends RecyclerView.Adapter<StaggeredAdapter.Item
 
     public StaggeredAdapter(Context context) {
         this.context = context;
-        test = DataUtils.initData();
     }
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ItemHolder(LayoutInflater.from(context).inflate(R.layout.list_item_test, parent, false));
+        return new ItemHolder(LayoutInflater.from(context).inflate(R.layout.item_test, parent, false));
     }
 
     @Override

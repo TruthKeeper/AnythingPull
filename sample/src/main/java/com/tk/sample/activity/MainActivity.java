@@ -89,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btn_listview:
+                intent = new Intent(this, ListViewActivity.class);
+                intent.putExtra("config", initConfig());
+                startActivity(intent);
                 break;
             case R.id.btn_recyclerview:
                 break;

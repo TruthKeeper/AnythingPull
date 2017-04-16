@@ -10,7 +10,6 @@
         android:layout_height="match_parent">
 
         <com.tk.sample.view.RefreshView
-            android:id="@+id/refresh_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -22,7 +21,6 @@
         </ScrollView>
 
         <com.tk.sample.view.LoadView
-            android:id="@+id/load_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.tk.anythingpull.AnythingPullLayout>

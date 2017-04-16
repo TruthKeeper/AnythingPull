@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tk.sample.R;
-import com.tk.sample.DataUtils;
 
 /**
  * Created by TK on 2016/7/25.
@@ -19,12 +18,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public RecyclerViewAdapter(Context context) {
         this.context = context;
-        test = DataUtils.initData();
     }
 
     @Override
     public ItemHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ItemHolder(LayoutInflater.from(context).inflate(R.layout.list_item_test, parent, false));
+        return new ItemHolder(LayoutInflater.from(context).inflate(R.layout.item_test, parent, false));
     }
 
     @Override
