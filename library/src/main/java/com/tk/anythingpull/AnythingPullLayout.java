@@ -562,24 +562,22 @@ public class AnythingPullLayout extends ViewGroup {
                 int dy = (int) (lastY - event.getY());
                 if (event.getY() > lastY) {
                     //下拉
-                    if (ViewCompat.canScrollVertically(contentView, -1)) {
-                        if (loadDistance > 0) {
-                            if (loadFixed && (mStatus == LOAD_ING || mStatus == LOAD_RESULT)) {
-                                break;
-                            }
-                            lastY = (int) event.getY();
-                            //上拉过程中下拉，默认无阻力
-                            if (!checkLoad(dy)) {
-                                return true;
-                            }
-                            cancelEvent(dy, event);
-
-                            loadDistance += dy;
-                            layoutSelf(true, 1);
+                    if (loadDistance > 0) {
+                        //上拉过程中下拉，默认无阻力
+                        if (loadFixed && (mStatus == LOAD_ING || mStatus == LOAD_RESULT)) {
+                            break;
+                        }
+                        lastY = (int) event.getY();
+                        if (!checkLoad(dy)) {
                             return true;
                         }
-                        break;
-                    } else {
+                        cancelEvent(dy, event);
+
+                        loadDistance += dy;
+                        layoutSelf(true, 1);
+                        return true;
+                    }
+                    if (!ViewCompat.canScrollVertically(contentView, -1)) {
                         //内容区域下拉到顶了
                         if (!refreshEnable) {
                             break;
@@ -602,25 +600,23 @@ public class AnythingPullLayout extends ViewGroup {
                     }
                 } else {
                     //上拉
-                    if (ViewCompat.canScrollVertically(contentView, 1)) {
-                        if (refreshDistance > 0) {
-                            if (refreshFixed && (mStatus == REFRESH_ING || mStatus == REFRESH_RESULT)) {
-                                break;
-                            }
-                            //下拉状态中上拉，默认无阻力
-                            lastY = (int) event.getY();
-                            if (!checkRefresh(dy)) {
-                                return true;
-                            }
-                            cancelEvent(dy, event);
-
-                            refreshDistance -= dy;
-                            layoutSelf(true, -1);
+                    if (refreshDistance > 0) {
+                        //下拉状态中上拉，默认无阻力
+                        if (refreshFixed && (mStatus == REFRESH_ING || mStatus == REFRESH_RESULT)) {
+                            break;
+                        }
+                        //下拉状态中上拉，默认无阻力
+                        lastY = (int) event.getY();
+                        if (!checkRefresh(dy)) {
                             return true;
                         }
+                        cancelEvent(dy, event);
 
-                        break;
-                    } else {
+                        refreshDistance -= dy;
+                        layoutSelf(true, -1);
+                        return true;
+                    }
+                    if (!ViewCompat.canScrollVertically(contentView, 1)) {
                         //内容区域上拉到底了
                         if (!loadEnable) {
                             break;
