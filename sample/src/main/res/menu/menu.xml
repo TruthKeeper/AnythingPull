@@ -2,19 +2,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     　　
     <item
-        android:id="@+id/LinearLayoutManager"
+        android:id="@+id/LinearLayout"
         android:orderInCategory="90"
-        android:title="LinearLayoutManager"
+        android:title="LinearLayout"
         app:showAsAction="collapseActionView" />
     <item
-        android:id="@+id/GridLayoutManager"
+        android:id="@+id/GridLayout"
         android:orderInCategory="90"
-        android:title="GridLayoutManager"
+        android:title="GridLayout"
         app:showAsAction="collapseActionView" />
     <item
-        android:id="@+id/StaggeredGridLayoutManager"
+        android:id="@+id/StaggeredGridLayout"
         android:orderInCategory="90"
-        android:title="StaggeredGridLayoutManager"
+        android:title="StaggeredGridLayout"
         app:showAsAction="collapseActionView" />
     　　
 </menu>

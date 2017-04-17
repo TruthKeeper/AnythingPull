@@ -1,226 +1,240 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:title="@string/app_name"
+        app:titleTextColor="@android:color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="下拉模式"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp" />
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/cbx_refresh_fixed"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="下拉模式"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+
+                <CheckBox
+                    android:id="@+id/cbx_refresh_fixed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="刷新视图固定(弹性和抽屉模式无效)" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/rgp_refresh"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="刷新视图固定(弹性和抽屉模式无效)" />
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbtn_refresh_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="禁用" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_refresh_pull"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="普通下拉" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_refresh_flex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="弹性下拉" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_refresh_layer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="层级下拉" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_refresh_dst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="抽屉下拉" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="上拉模式"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+
+
+                <CheckBox
+                    android:id="@+id/cbx_load_fixed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="加载视图固定(弹性和抽屉模式无效))" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/rgp_load"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbtn_load_none"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="禁用" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_load_pull"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="普通上拉" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_load_flex"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="弹性上拉" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_load_layer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="层级上拉" />
+
+                <RadioButton
+                    android:id="@+id/rbtn_load_dst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="抽屉上拉" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/btn_scrollview"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:text="ScrollView"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/btn_listview"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:text="ListView"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/btn_recyclerview"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:text="RecyclerView"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/btn_nested"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:text="Nested\nScrollView"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/btn_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:text="普通Layout"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/btn_crazy"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:text="复杂场景"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
         </LinearLayout>
-
-        <RadioGroup
-            android:id="@+id/rgp_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/rbtn_refresh_none"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="禁用" />
-
-            <RadioButton
-                android:id="@+id/rbtn_refresh_pull"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="普通下拉" />
-
-            <RadioButton
-                android:id="@+id/rbtn_refresh_flex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="弹性下拉" />
-
-            <RadioButton
-                android:id="@+id/rbtn_refresh_layer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="层级下拉" />
-
-            <RadioButton
-                android:id="@+id/rbtn_refresh_dst"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="抽屉下拉" />
-        </RadioGroup>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="上拉模式"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp" />
-
-
-            <CheckBox
-                android:id="@+id/cbx_load_fixed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="加载视图固定(弹性和抽屉模式无效))" />
-        </LinearLayout>
-
-        <RadioGroup
-            android:id="@+id/rgp_load"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <RadioButton
-                android:id="@+id/rbtn_load_none"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="禁用" />
-
-            <RadioButton
-                android:id="@+id/rbtn_load_pull"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="普通上拉" />
-
-            <RadioButton
-                android:id="@+id/rbtn_load_flex"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="弹性上拉" />
-
-            <RadioButton
-                android:id="@+id/rbtn_load_layer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="层级上拉" />
-
-            <RadioButton
-                android:id="@+id/rbtn_load_dst"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="抽屉上拉" />
-        </RadioGroup>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:id="@+id/btn_scrollview"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:text="ScrollView"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/btn_listview"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:text="ListView"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/btn_recyclerview"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:text="RecyclerView"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
-
-            <TextView
-                android:id="@+id/btn_nested"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:text="Nested\nScrollView"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/btn_layout"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:text="普通Layout"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/btn_crazy"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:text="复杂场景"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

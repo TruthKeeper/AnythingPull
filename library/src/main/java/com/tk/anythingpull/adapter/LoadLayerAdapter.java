@@ -26,7 +26,7 @@ public class LoadLayerAdapter extends ViewAdapter {
     @Override
     public void layout(int distance, AnythingPullLayout pullLayout) {
         int left = pullLayout.getPaddingLeft();
-        int top = pullLayout.getBottom() - pullLayout.getPaddingBottom() - distance;
+        int top = pullLayout.getMeasuredHeight() - pullLayout.getPaddingBottom() - distance;
         int right = left + view.getMeasuredWidth();
         int bottom = top + view.getMeasuredHeight();
         view.layout(left, top, right, bottom);

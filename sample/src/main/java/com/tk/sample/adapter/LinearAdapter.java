@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tk.anythingpull.Utils;
 import com.tk.sample.OnItemClickListener;
 import com.tk.sample.R;
 
@@ -17,14 +16,14 @@ import java.util.List;
  * <pre>
  *     author : TK
  *     time   : 2017/04/17
- *     desc   : 瀑布流
+ *     desc   : 线性
  * </pre>
  */
-public class StaggeredAdapter extends RecyclerView.Adapter<StaggeredAdapter.ItemHolder> {
+public class LinearAdapter extends RecyclerView.Adapter<LinearAdapter.ItemHolder> {
     private List<String> list = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
 
-    public StaggeredAdapter(List<String> list) {
+    public LinearAdapter(List<String> list) {
         this.list = list;
     }
 
@@ -36,8 +35,6 @@ public class StaggeredAdapter extends RecyclerView.Adapter<StaggeredAdapter.Item
     @Override
     public void onBindViewHolder(ItemHolder holder, int position) {
         ((TextView) holder.itemView).setText(list.get(position));
-        ViewGroup.LayoutParams p = holder.itemView.getLayoutParams();
-        p.height = Utils.dp2px(50) + 50 * (position % 3);
     }
 
     @Override
@@ -62,4 +59,5 @@ public class StaggeredAdapter extends RecyclerView.Adapter<StaggeredAdapter.Item
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
+
 }

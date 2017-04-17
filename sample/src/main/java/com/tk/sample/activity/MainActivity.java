@@ -94,10 +94,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btn_recyclerview:
+                intent = new Intent(this, RecyclerViewActivity.class);
+                intent.putExtra("config", initConfig());
+                startActivity(intent);
                 break;
             case R.id.btn_nested:
+                intent = new Intent(this, NestedScrollViewActivity.class);
+                intent.putExtra("config", initConfig());
+                startActivity(intent);
                 break;
             case R.id.btn_layout:
+                intent = new Intent(this, LayoutActivity.class);
+                intent.putExtra("config", initConfig());
+                startActivity(intent);
                 break;
             case R.id.btn_crazy:
                 break;

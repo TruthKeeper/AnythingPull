@@ -42,10 +42,17 @@ public class ListViewActivity extends AppCompatActivity implements AnythingPullL
                 Toast.makeText(ListViewActivity.this, position + " 被点击了", Toast.LENGTH_SHORT).show();
             }
         });
-        adapter = new ListViewAdapter(list);
-        listview.setAdapter(adapter);
+
         Config config = getIntent().getParcelableExtra("config");
         config.attachToLayout(pullLayout);
+
+        if (!config.refreshEnable || config.refreshMode == 1) {
+            for (int i = 0; i < 20; i++) {
+                list.add("数据：" + i);
+            }
+        }
+        adapter = new ListViewAdapter(list);
+        listview.setAdapter(adapter);
 
         pullLayout.setOnPullListener(this);
 
@@ -59,7 +66,7 @@ public class ListViewActivity extends AppCompatActivity implements AnythingPullL
             @Override
             public void run() {
                 list.clear();
-                for (int i = 0; i < 15; i++) {
+                for (int i = 0; i < 20; i++) {
                     list.add("数据：" + i);
                 }
                 adapter.notifyDataSetChanged();
@@ -76,6 +83,7 @@ public class ListViewActivity extends AppCompatActivity implements AnythingPullL
             public void run() {
                 list.add("新数据");
                 adapter.notifyDataSetChanged();
+                listview.smoothScrollToPosition(adapter.getCount() - 1);
                 pullLayout.responseload(true);
             }
         }, 2000);
