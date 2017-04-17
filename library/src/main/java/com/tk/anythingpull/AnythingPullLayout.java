@@ -638,6 +638,7 @@ public class AnythingPullLayout extends ViewGroup {
                         return true;
                     }
                 }
+                break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (refreshDistance > 0 && (refreshDistance < refreshViewHeight || refreshViewHeight == 0)) {

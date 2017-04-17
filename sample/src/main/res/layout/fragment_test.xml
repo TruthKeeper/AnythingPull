@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tk.anythingpull.AnythingPullLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pull_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <com.tk.sample.view.RefreshView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.tk.sample.view.LoadView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</com.tk.anythingpull.AnythingPullLayout>
+

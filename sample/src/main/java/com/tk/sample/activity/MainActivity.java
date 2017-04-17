@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btn_crazy:
+                intent = new Intent(this, CrazyActivity.class);
+                startActivity(intent);
                 break;
         }
     }

@@ -15,11 +15,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.tk.sample.activity.ScrollViewActivity" />
-        <activity android:name="com.tk.sample.activity.ListViewActivity" />
-        <activity android:name="com.tk.sample.activity.RecyclerViewActivity" />
-        <activity android:name="com.tk.sample.activity.LayoutActivity" />
-        <activity android:name="com.tk.sample.activity.NestedScrollViewActivity" />
+        <activity android:name=".activity.ScrollViewActivity" />
+        <activity android:name=".activity.ListViewActivity" />
+        <activity android:name=".activity.RecyclerViewActivity" />
+        <activity android:name=".activity.LayoutActivity" />
+        <activity android:name=".activity.NestedScrollViewActivity" />
+        <activity android:name=".activity.CrazyActivity" />
 
     </application>
 
