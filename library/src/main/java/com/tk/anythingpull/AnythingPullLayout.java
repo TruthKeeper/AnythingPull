@@ -575,6 +575,10 @@ public class AnythingPullLayout extends ViewGroup {
 
                         loadDistance += dy;
                         layoutSelf(true, 1);
+                        if (loadDistance == 0) {
+                            //恢复事件，可以滚动衔接
+                            resetEvent(event);
+                        }
                         return true;
                     }
                     if (!ViewCompat.canScrollVertically(contentView, -1)) {
@@ -614,6 +618,10 @@ public class AnythingPullLayout extends ViewGroup {
 
                         refreshDistance -= dy;
                         layoutSelf(true, -1);
+                        if (refreshDistance == 0) {
+                            //恢复事件，可以滚动衔接
+                            resetEvent(event);
+                        }
                         return true;
                     }
                     if (!ViewCompat.canScrollVertically(contentView, 1)) {
@@ -669,6 +677,12 @@ public class AnythingPullLayout extends ViewGroup {
         return super.dispatchTouchEvent(event);
     }
 
+    /**
+     * 取消事件
+     *
+     * @param dy
+     * @param event
+     */
     private void cancelEvent(int dy, MotionEvent event) {
         if (Math.abs(dy) > touchSlop && (!hasCancel)) {
             //cancel事件
@@ -677,6 +691,17 @@ public class AnythingPullLayout extends ViewGroup {
             super.dispatchTouchEvent(e);
             hasCancel = true;
         }
+    }
+
+    /**
+     * 恢复事件响应
+     *
+     * @param event
+     */
+    private void resetEvent(MotionEvent event) {
+        MotionEvent e = MotionEvent.obtain(event.getDownTime(), event.getEventTime(),
+                MotionEvent.ACTION_DOWN, event.getX(), event.getY(), event.getMetaState());
+        super.dispatchTouchEvent(e);
     }
 
     /**
