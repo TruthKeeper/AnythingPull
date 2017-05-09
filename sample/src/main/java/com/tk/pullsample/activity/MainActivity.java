@@ -1,4 +1,4 @@
-package com.tk.sample.activity;
+package com.tk.pullsample.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +9,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.tk.sample.Config;
-import com.tk.sample.R;
+import com.tk.pullsample.Config;
+import com.tk.pullsample.R;
 
 /**
  * <pre>

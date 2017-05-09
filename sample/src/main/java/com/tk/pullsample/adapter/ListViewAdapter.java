@@ -1,4 +1,4 @@
-package com.tk.sample.adapter;
+package com.tk.pullsample.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.tk.sample.R;
+import com.tk.pullsample.R;
 
 import java.util.List;
 

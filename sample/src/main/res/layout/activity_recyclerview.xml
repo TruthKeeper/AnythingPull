@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:background="@android:color/white">
 
-        <com.tk.sample.view.RefreshView
+        <com.tk.pullsample.view.RefreshView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.tk.sample.view.LoadView
+        <com.tk.pullsample.view.LoadView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.tk.anythingpull.AnythingPullLayout>

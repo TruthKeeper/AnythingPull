@@ -1,4 +1,4 @@
-package com.tk.sample.activity;
+package com.tk.pullsample.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +9,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.tk.anythingpull.AnythingPullLayout;
-import com.tk.sample.Config;
-import com.tk.sample.R;
-import com.tk.sample.adapter.ListViewAdapter;
+import com.tk.pullsample.Config;
+import com.tk.pullsample.R;
+import com.tk.pullsample.adapter.ListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,7 @@ import android.content.res.Resources;
  * <pre>
  *     author : TK
  *     time   : 2017/04/12
- *     desc   : xxxx描述
+ *     desc   : 像素工具
  * </pre>
  */
 public class Utils {

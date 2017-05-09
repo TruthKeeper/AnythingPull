@@ -536,7 +536,7 @@ public class AnythingPullLayout extends ViewGroup {
     }
 
     /**
-     * 重写分发规则，防止requestDisallowInterceptTouchEvent
+     * 重写分发规则，防止子控件requestDisallowInterceptTouchEvent
      *
      * @param event
      * @return

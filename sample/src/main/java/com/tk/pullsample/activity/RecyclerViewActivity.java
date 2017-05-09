@@ -1,4 +1,4 @@
-package com.tk.sample.activity;
+package com.tk.pullsample.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,12 +12,12 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.tk.anythingpull.AnythingPullLayout;
-import com.tk.sample.Config;
-import com.tk.sample.OnItemClickListener;
-import com.tk.sample.R;
-import com.tk.sample.adapter.GridAdapter;
-import com.tk.sample.adapter.LinearAdapter;
-import com.tk.sample.adapter.StaggeredAdapter;
+import com.tk.pullsample.Config;
+import com.tk.pullsample.OnItemClickListener;
+import com.tk.pullsample.R;
+import com.tk.pullsample.adapter.GridAdapter;
+import com.tk.pullsample.adapter.LinearAdapter;
+import com.tk.pullsample.adapter.StaggeredAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

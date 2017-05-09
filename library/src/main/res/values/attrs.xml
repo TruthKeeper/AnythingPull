@@ -2,27 +2,35 @@
 <resources>
     <declare-styleable name="AnythingPullLayout">
         <attr name="refresh_mode" format="enum">
+            <!--普通下拉-->
             <enum name="pull" value="0" />
+            <!--弹性下拉-->
             <enum name="flex" value="1" />
+            <!--层级下拉-->
             <enum name="layer" value="2" />
+            <!--抽屉下拉-->
             <enum name="dst" value="3" />
         </attr>
         <attr name="load_mode" format="enum">
+            <!--普通上拉-->
             <enum name="pull" value="0" />
+            <!--弹性上拉-->
             <enum name="flex" value="1" />
+            <!--层级上拉-->
             <enum name="layer" value="2" />
+            <!--抽屉上拉-->
             <enum name="dst" value="3" />
         </attr>
-        <!--阻力-->
+        <!--阻力，默认1.6F-->
         <attr name="refresh_resistance" format="float" />
         <attr name="load_resistance" format="float" />
-        <!--回弹的时长-->
+        <!--回弹的时长，300ms-->
         <attr name="refresh_close_during" format="integer" />
         <attr name="load_close_during" format="integer" />
-        <!--结果停留时长-->
+        <!--结果停留时长，750ms-->
         <attr name="refresh_result_during" format="integer" />
         <attr name="load_result_during" format="integer" />
-        <!--刷新中和加载中视图固定-->
+        <!--刷新中和加载中视图是否固定-->
         <attr name="refresh_fixed" format="boolean" />
         <attr name="load_fixed" format="boolean" />
         <!--刷新和加载功能开启-->

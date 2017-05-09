@@ -1,4 +1,4 @@
-package com.tk.sample.adapter;
+package com.tk.pullsample.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.tk.anythingpull.Utils;
-import com.tk.sample.OnItemClickListener;
-import com.tk.sample.R;
+import com.tk.pullsample.OnItemClickListener;
+import com.tk.pullsample.R;
 
 import java.util.ArrayList;
 import java.util.List;

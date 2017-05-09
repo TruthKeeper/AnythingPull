@@ -1,4 +1,4 @@
-package com.tk.sample.log;
+package com.tk.pullsample.log;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,30 +8,30 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.tk.sample.R;
+import com.tk.pullsample.R;
 import com.tk.anythingpull.AnythingPullLayout;
-import com.tk.anythingpull.IRefresh;
+import com.tk.anythingpull.ILoad;
 
 /**
  * <pre>
  *     author : TK
  *     time   : 2017/04/14
- *     desc   : 下拉刷新，测试日志
+ *     desc   : 上拉加载，测试日志
  * </pre>
  */
-public class LogRefreshView extends LinearLayout implements IRefresh {
-    private static final String TAG = "LogRefreshView";
+public class LogLoadView extends LinearLayout implements ILoad {
+    private static final String TAG = "LogLoadView";
     private TextView tvDistance;
     private TextView tvStatus;
     private ProgressBar progressbar;
 
-    public LogRefreshView(Context context) {
+    public LogLoadView(Context context) {
         this(context, null);
     }
 
-    public LogRefreshView(Context context, AttributeSet attrs) {
+    public LogLoadView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.refresh_log_layout, this);
+        LayoutInflater.from(context).inflate(R.layout.load_log_layout, this);
         tvDistance = (TextView) findViewById(R.id.tv_distance);
         tvStatus = (TextView) findViewById(R.id.tv_status);
         progressbar = (ProgressBar) findViewById(R.id.progressbar);
@@ -42,13 +42,13 @@ public class LogRefreshView extends LinearLayout implements IRefresh {
     public void preShow() {
         Log.e(TAG, "preShow: ");
         tvStatus.setVisibility(VISIBLE);
-        tvStatus.setText("下拉刷新");
+        tvStatus.setText("上拉加载");
     }
 
     @Override
     public void preDismiss() {
         Log.e(TAG, "preDismiss: ");
-        tvStatus.setText("下拉刷新");
+        tvStatus.setText("上拉加载");
     }
 
     @Override
@@ -64,17 +64,17 @@ public class LogRefreshView extends LinearLayout implements IRefresh {
             case AnythingPullLayout.INIT:
                 Log.e("onPositionChange", "INIT");
                 break;
-            case AnythingPullLayout.PRE_REFRESH:
-                Log.e("onPositionChange", "PRE_REFRESH");
+            case AnythingPullLayout.PRE_LOAD:
+                Log.e("onPositionChange", "PRE_LOAD");
                 break;
-            case AnythingPullLayout.TO_REFRESH:
-                Log.e("onPositionChange", "TO_REFRESH");
+            case AnythingPullLayout.TO_LOAD:
+                Log.e("onPositionChange", "TO_LOAD");
                 break;
-            case AnythingPullLayout.REFRESH_ING:
-                Log.e("onPositionChange", "REFRESH_ING");
+            case AnythingPullLayout.LOAD_ING:
+                Log.e("onPositionChange", "LOAD_ING");
                 break;
-            case AnythingPullLayout.REFRESH_RESULT:
-                Log.e("onPositionChange", "REFRESH_RESULT");
+            case AnythingPullLayout.LOAD_RESULT:
+                Log.e("onPositionChange", "LOAD_RESULT");
                 break;
             default:
                 break;
@@ -82,14 +82,14 @@ public class LogRefreshView extends LinearLayout implements IRefresh {
     }
 
     @Override
-    public void onRefreshStart() {
-        Log.e(TAG, "onRefreshStart: ");
-        tvStatus.setText("刷新中。。。");
+    public void onLoadStart() {
+        Log.e(TAG, "onLoadStart: ");
+        tvStatus.setText("加载中。。。");
     }
 
     @Override
-    public void onRefreshFinish(boolean success) {
-        Log.e(TAG, "onRefreshFinish: " + success);
-        tvStatus.setText(success ? "刷新成功" : "刷新失败");
+    public void onLoadFinish(boolean success) {
+        Log.e(TAG, "onLoadFinish: " + success);
+        tvStatus.setText(success ? "加载成功" : "加载失败");
     }
 }

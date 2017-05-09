@@ -1,4 +1,4 @@
-package com.tk.sample.view;
+package com.tk.pullsample.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,27 +11,27 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tk.anythingpull.AnythingPullLayout;
-import com.tk.anythingpull.ILoad;
-import com.tk.sample.R;
+import com.tk.anythingpull.IRefresh;
+import com.tk.pullsample.R;
 
 /**
  * <pre>
  *     author : TK
  *     time   : 2017/04/14
- *     desc   : 上拉加载
+ *     desc   : 下拉刷新
  * </pre>
  */
-public class LoadView extends LinearLayout implements ILoad {
-    private static final String TAG = "LoadView";
+public class RefreshView extends LinearLayout implements IRefresh {
+    private static final String TAG = "RefreshView";
     private TextView tvStatus;
     private ImageView imageView;
     private RotateAnimation rotateAnimation;
 
-    public LoadView(Context context) {
+    public RefreshView(Context context) {
         this(context, null);
     }
 
-    public LoadView(Context context, AttributeSet attrs) {
+    public RefreshView(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.common_layout, this);
         tvStatus = (TextView) findViewById(R.id.tv_status);
@@ -51,12 +51,12 @@ public class LoadView extends LinearLayout implements ILoad {
     @Override
     public void preShow() {
         imageView.setVisibility(VISIBLE);
-        tvStatus.setText("上拉加载");
+        tvStatus.setText("下拉刷新");
     }
 
     @Override
     public void preDismiss() {
-        tvStatus.setText("上拉加载");
+        tvStatus.setText("下拉刷新");
     }
 
     @Override
@@ -67,26 +67,27 @@ public class LoadView extends LinearLayout implements ILoad {
 
     @Override
     public void onPositionChange(boolean touch, int distance, @AnythingPullLayout.Status int status) {
-        if (status != AnythingPullLayout.LOAD_ING && status != AnythingPullLayout.LOAD_RESULT) {
+        if (status != AnythingPullLayout.REFRESH_ING && status != AnythingPullLayout.REFRESH_RESULT) {
             imageView.setRotation(distance);
         }
-        if (status == AnythingPullLayout.TO_LOAD) {
-            tvStatus.setText("释放立即加载");
-        } else if (status == AnythingPullLayout.PRE_LOAD) {
-            tvStatus.setText("上拉加载");
+        if (status == AnythingPullLayout.TO_REFRESH) {
+            tvStatus.setText("释放立即刷新");
+        } else if (status == AnythingPullLayout.PRE_REFRESH) {
+            tvStatus.setText("下拉刷新");
         }
     }
 
+
     @Override
-    public void onLoadStart() {
+    public void onRefreshStart() {
         startAnim();
-        tvStatus.setText("加载中。。。");
+        tvStatus.setText("刷新中。。。");
     }
 
     @Override
-    public void onLoadFinish(boolean success) {
+    public void onRefreshFinish(boolean success) {
         imageView.clearAnimation();
         imageView.setVisibility(GONE);
-        tvStatus.setText(success ? "加载成功" : "加载失败");
+        tvStatus.setText(success ? "刷新成功" : "刷新失败");
     }
 }

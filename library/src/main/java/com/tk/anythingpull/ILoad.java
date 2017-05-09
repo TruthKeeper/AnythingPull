@@ -4,10 +4,10 @@ package com.tk.anythingpull;
  * <pre>
  *     author : TK
  *     time   : 2017/04/11
- *     desc   : 上拉加载视图
+ *     desc   : 上拉加载视图，实现此接口
  * </pre>
  */
-public interface ILoad extends Action {
+public interface ILoad extends IAction {
     /**
      * 开始加载
      */

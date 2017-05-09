@@ -7,7 +7,7 @@ package com.tk.anythingpull;
  *     desc   : 刷新和加载的公共功能
  * </pre>
  */
-public interface Action {
+public interface IAction {
     /**
      * 准备显示
      */
@@ -30,6 +30,5 @@ public interface Action {
      * @param distance
      * @param status
      */
-
     void onPositionChange(boolean touch, int distance, @AnythingPullLayout.Status int status);
 }

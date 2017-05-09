@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.tk.sample"
+        applicationId "com.tk.pullsample"
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1

@@ -8,7 +8,7 @@
     app:load_enable="false"
     app:refresh_mode="dst">
 
-    <com.tk.sample.view.RefreshView
+    <com.tk.pullsample.view.RefreshView
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

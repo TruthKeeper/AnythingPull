@@ -1,4 +1,4 @@
-package com.tk.sample;
+package com.tk.pullsample;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tk.anythingpull.AnythingPullLayout;
-import com.tk.sample.adapter.LinearAdapter;
+import com.tk.pullsample.adapter.LinearAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

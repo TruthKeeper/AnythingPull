@@ -1,4 +1,4 @@
-package com.tk.sample.activity;
+package com.tk.pullsample.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.tk.anythingpull.AnythingPullLayout;
-import com.tk.sample.R;
-import com.tk.sample.TestFragment;
+import com.tk.pullsample.R;
+import com.tk.pullsample.TestFragment;
 
 import java.util.ArrayList;
 import java.util.List;
