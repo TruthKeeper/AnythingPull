@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView btnRecyclerview;
     private TextView btnNested;
     private TextView btnLayout;
-    private TextView btnCrazy;
+    private TextView btnDesign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +68,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnRecyclerview = (TextView) findViewById(R.id.btn_recyclerview);
         btnNested = (TextView) findViewById(R.id.btn_nested);
         btnLayout = (TextView) findViewById(R.id.btn_layout);
-        btnCrazy = (TextView) findViewById(R.id.btn_crazy);
+        btnDesign = (TextView) findViewById(R.id.btn_design);
 
         btnScrollview.setOnClickListener(this);
         btnListview.setOnClickListener(this);
         btnRecyclerview.setOnClickListener(this);
         btnNested.setOnClickListener(this);
         btnLayout.setOnClickListener(this);
-        btnCrazy.setOnClickListener(this);
+        btnDesign.setOnClickListener(this);
     }
 
 
@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("config", initConfig());
                 startActivity(intent);
                 break;
-            case R.id.btn_crazy:
-                intent = new Intent(this, CrazyActivity.class);
+            case R.id.btn_design:
+                intent = new Intent(this, DesignActivity.class);
                 startActivity(intent);
                 break;
         }

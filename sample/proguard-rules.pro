@@ -1,17 +1,14 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in E:\eclipse\sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+#指定代码的压缩级别
+-optimizationpasses 5
 
-# Add any project specific keep options here:
+#不去忽略非公共的库类
+-dontskipnonpubliclibraryclasses
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# 混淆时所采用的算法
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+#把混淆类中的方法名也混淆了
+-useuniqueclassmembernames
+
+#优化时允许访问并修改有修饰符的类和类的成员
+-allowaccessmodification

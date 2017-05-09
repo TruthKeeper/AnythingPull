@@ -224,13 +224,13 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/btn_crazy"
+                    android:id="@+id/btn_design"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@color/colorAccent"
                     android:gravity="center"
-                    android:text="复杂场景"
+                    android:text="Design场景"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     android:visibility="invisible" />

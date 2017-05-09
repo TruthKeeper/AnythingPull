@@ -207,7 +207,6 @@ public class AnythingPullLayout extends ViewGroup {
         touchSlop = Utils.dp2px(1);
     }
 
-
     @Override
     protected LayoutParams generateLayoutParams(LayoutParams p) {
         return new MarginLayoutParams(p);

@@ -1,4 +1,9 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+version = "1.0"
+group = "com.tk.anythingpull"
 
 android {
     compileSdkVersion 25
@@ -6,7 +11,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
@@ -22,4 +27,82 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.3.1'
+}
+
+def siteUrl = 'https://github.com/TruthKeeper/AnythingPull' // 项目主页。
+def gitUrl = 'git@github.com:TruthKeeper/AnythingPull.git' // Git仓库的url。
+
+install {
+    repositories.mavenInstaller {
+        // 生成pom.xml和参数
+        pom {
+            project {
+                packaging 'aar'
+                name 'AnythingPull for Android,Pull-To-Refresh-And-Load'
+                description 'Pull-To-Refresh-And-Load'
+                url siteUrl // 项目主页
+
+                // 软件开源协议
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                //开发者基本信息
+                developers {
+                    developer {
+                        id 'wangbinwei' // 开发者的id。
+                        name 'wangbinwei' // 开发者名字。
+                        email 'wbw923474623@gmail.com' // 开发者邮箱。
+                    }
+                }
+
+                // SCM
+                scm {
+                    connection gitUrl // Git仓库地址。
+                    developerConnection gitUrl // Git仓库地址。
+                    url siteUrl // 项目主页。
+                }
+            }
+        }
+    }
+}
+// 生成jar包的task
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+// 生成jarDoc的task
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError false // 忽略注释语法错误
+}
+// 生成javaDoc的jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        repo = "maven"  // 上传到maven库。
+        name = "AnythingPull" // 发布到Bintray上的项目名字
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true // 是否是公开项目。
+    }
 }

@@ -20,7 +20,7 @@
         <activity android:name=".activity.RecyclerViewActivity" />
         <activity android:name=".activity.LayoutActivity" />
         <activity android:name=".activity.NestedScrollViewActivity" />
-        <activity android:name=".activity.CrazyActivity" />
+        <activity android:name=".activity.DesignActivity" />
 
     </application>
 
