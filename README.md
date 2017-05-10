@@ -6,7 +6,7 @@
 
 ### [下载APK把玩](https://raw.githubusercontent.com/TruthKeeper/AnythingPull/master/Sample.apk)
 
-### [简书地址]()
+### [简书地址](http://www.jianshu.com/p/6eb347d7e207)
 
 ## 如何引入
 ```
