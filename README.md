@@ -11,7 +11,7 @@
 ## 如何引入
 ```
 dependencies {
-    compile 'com.tk.anythingpull:library:1.0'
+    compile 'com.tk.anythingpull:library:1.1'
 }
 ```
 ```
