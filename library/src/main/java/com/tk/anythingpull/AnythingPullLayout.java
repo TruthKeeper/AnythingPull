@@ -574,7 +574,7 @@ public class AnythingPullLayout extends ViewGroup {
 
                         loadDistance += dy;
                         layoutSelf(true, 1);
-                        if (loadDistance == 0) {
+                        if (loadDistance == 0&&ViewCompat.canScrollVertically(contentView, -1)) {
                             //恢复事件，可以滚动衔接
                             resetEvent(event);
                         }
@@ -617,7 +617,7 @@ public class AnythingPullLayout extends ViewGroup {
 
                         refreshDistance -= dy;
                         layoutSelf(true, -1);
-                        if (refreshDistance == 0) {
+                        if (refreshDistance == 0 && ViewCompat.canScrollVertically(contentView, 1)) {
                             //恢复事件，可以滚动衔接
                             resetEvent(event);
                         }
